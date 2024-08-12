@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Login from './screens/Login.js'; 
 import Register from './screens/Register';
 import Profile from './screens/Profile.js';
+import Restaurants from './screens/Restaurants.js';
 
 import { Button } from 'react-native';
 
@@ -16,19 +17,13 @@ function HomeTabs({ navigation }) {
   return (
     <Tab.Navigator>
       <Tab.Screen 
+        name="Início" 
+        component={Restaurants} 
+      />
+      <Tab.Screen 
         name="Perfil" 
         component={Profile} 
-        options={{
-          headerRight: () => (
-            <Button
-              onPress={() => navigation.replace('Login')}
-              title="Logout"
-              color="#000"
-            />
-          ),
-        }}
       />
-      {/* Você pode adicionar outras abas aqui, como Meu Perfil, Avaliações, Configurações */}
     </Tab.Navigator>
   );
 }
