@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image, ScrollView } from 'react-native';
 
-export default function Restaurants() {
+export default function Stores() {
   const recentPurchases = [
     { id: '1', name: 'Restaurante A', image: 'https://via.placeholder.com/100' },
     { id: '2', name: 'Restaurante B', image: 'https://via.placeholder.com/100' },

@@ -6,9 +6,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Login from './screens/Login.js'; 
 import Register from './screens/Register';
 import Profile from './screens/Profile.js';
-import Restaurants from './screens/Restaurants.js';
-
-import { Button } from 'react-native';
+import Stores from './screens/Stores.js';
+import LastOrders from './screens/LastOrders.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -18,7 +17,11 @@ function HomeTabs({ navigation }) {
     <Tab.Navigator>
       <Tab.Screen 
         name="Início" 
-        component={Restaurants} 
+        component={Stores} 
+      />
+      <Tab.Screen 
+        name="Pedidos" 
+        component={LastOrders} 
       />
       <Tab.Screen 
         name="Perfil" 
