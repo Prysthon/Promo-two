@@ -8,16 +8,21 @@ import Register from './screens/Register';
 import Profile from './screens/Profile.js';
 import Stores from './screens/Stores.js';
 import LastOrders from './screens/LastOrders.js';
+import StoresSearch from './screens/StoresSearch.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function HomeTabs({ navigation }) {
+function HomeTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen 
         name="Início" 
         component={Stores} 
+      />
+      <Tab.Screen 
+        name="Buscar" 
+        component={StoresSearch} 
       />
       <Tab.Screen 
         name="Pedidos" 
