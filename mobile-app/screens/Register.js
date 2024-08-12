@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#1b2223',
+    backgroundColor: '#3ad3f3',
     width: "100%",
     height: "100%",
   },
@@ -89,11 +89,11 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 72,
     fontWeight: 'bold',
-    color: '#3ad3f3',
+    color: '#ffffff',
     textAlign: 'center',
   },
   content: {
-    backgroundColor: '#3a4f50',
+    backgroundColor: '#ffffff',
     borderRadius: 15,
     width: '90%',
     height: '65%',
@@ -114,14 +114,14 @@ const styles = StyleSheet.create({
   titlePrimary: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#000',
     marginBottom: 15,
     textAlign: 'center',
   },
   descriptionPrimary: {
     fontSize: 14,
     fontWeight: '300',
-    color: '#fff',
+    color: '#000',
     textAlign: 'center',
   },
   titleSecond: {
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   btnPrimary: {
-    borderColor: '#fff',
+    borderColor: '#000',
     borderWidth: 1,
     borderRadius: 15,
     paddingVertical: 10,
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   btnText: {
-    color: '#fff',
+    color: '#000',
     fontWeight: 'bold',
     fontSize: 10,
     textTransform: 'uppercase',
