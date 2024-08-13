@@ -13,7 +13,10 @@ export default function Profile({ navigation }) {
         <Text style={styles.profileEmail}>john.doe@example.com</Text>
       </View>
       <View style={styles.optionsContainer}>
-        <TouchableOpacity style={styles.option}>
+        <TouchableOpacity 
+          style={styles.option}
+          onPress={() => navigation.navigate('EditProfile')}
+        >
           <Text style={styles.optionText}>Editar Perfil</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.option}>
@@ -45,9 +48,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     alignItems: 'center',
     paddingTop: 20,
-  },
-  header: {
-    marginBottom: 20,
   },
   profileContainer: {
     alignItems: 'center',

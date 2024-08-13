@@ -10,6 +10,7 @@ import Profile from './screens/Profile.js';
 import Stores from './screens/Stores.js';
 import LastOrders from './screens/LastOrders.js';
 import StoresSearch from './screens/StoresSearch.js';
+import EditProfile from './screens/EditProfile.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -75,6 +76,14 @@ export default function App() {
           name="HomeTabs" 
           component={HomeTabs} 
           options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="EditProfile" 
+          component={EditProfile} 
+          options={{
+            title: 'Editar Perfil', 
+            headerBackTitle: 'Voltar',
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
