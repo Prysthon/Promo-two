@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 
-export default function RestaurantSearch() {
+export default function CategorySearch() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
-    { id: '1', name: 'Pizza', image: 'https://via.placeholder.com/150' },
-    { id: '2', name: 'Sushi', image: 'https://via.placeholder.com/150' },
-    { id: '3', name: 'Hambúrguer', image: 'https://via.placeholder.com/150' },
-    { id: '4', name: 'Saladas', image: 'https://via.placeholder.com/150' },
-    { id: '5', name: 'Massas', image: 'https://via.placeholder.com/150' },
-    { id: '6', name: 'Sobremesas', image: 'https://via.placeholder.com/150' },
-    // Adicione mais categorias conforme necessário
+    { id: '1', name: 'Elétricos', image: 'https://via.placeholder.com/150' },
+    { id: '2', name: 'Hidráulicos', image: 'https://via.placeholder.com/150' },
+    { id: '3', name: 'Ferragens', image: 'https://via.placeholder.com/150' },
+    { id: '4', name: 'Utensílios', image: 'https://via.placeholder.com/150' },
+    { id: '5', name: 'Roupas', image: 'https://via.placeholder.com/150' },
+    { id: '6', name: 'Calçados', image: 'https://via.placeholder.com/150' },
+    { id: '7', name: 'Acessórios', image: 'https://via.placeholder.com/150' },
+    { id: '8', name: 'Alimentos', image: 'https://via.placeholder.com/150' },
+    { id: '9', name: 'Bebidas', image: 'https://via.placeholder.com/150' },
+    { id: '10', name: 'Higiene', image: 'https://via.placeholder.com/150' },
+    { id: '11', name: 'Beleza', image: 'https://via.placeholder.com/150' },
   ];
 
   const renderCategories = () => {
-    // Dividir as categorias em pares para renderização em duas colunas
     const rows = [];
     for (let i = 0; i < categories.length; i += 2) {
       rows.push(
@@ -44,16 +47,14 @@ export default function RestaurantSearch() {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Campo de busca */}
       <TextInput
         style={styles.searchInput}
-        placeholder="Buscar restaurante..."
+        placeholder="Buscar categoria..."
         placeholderTextColor="#666"
         value={searchQuery}
         onChangeText={(text) => setSearchQuery(text)}
       />
       <Text style={styles.sectionTitle}>Categorias</Text>
-      {/* Categorias */}
       <View style={styles.categoriesContainer}>
         {renderCategories()}
       </View>
@@ -113,4 +114,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
