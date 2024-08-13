@@ -12,6 +12,8 @@ import LastOrders from './screens/LastOrders.js';
 import StoresSearch from './screens/StoresSearch.js';
 import EditProfile from './screens/EditProfile.js';
 import Settings from './screens/Settings.js';
+import PurchaseHistory from './screens/PurchaseHistory.js';
+import PaymentMethods from './screens/PaymentMethods.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -91,6 +93,22 @@ export default function App() {
           component={Settings} 
           options={{
             title: 'Configurações', 
+            headerBackTitle: 'Voltar',
+          }}
+        />
+        <Stack.Screen 
+          name="PurchaseHistory" 
+          component={PurchaseHistory} 
+          options={{
+            title: 'Histórico de Compras', 
+            headerBackTitle: 'Voltar',
+          }}
+        />
+        <Stack.Screen 
+          name="PaymentMethods" 
+          component={PaymentMethods} 
+          options={{
+            title: 'Formas de Pagamento', 
             headerBackTitle: 'Voltar',
           }}
         />
