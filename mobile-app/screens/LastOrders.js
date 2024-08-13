@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 
 export default function LastOrders() {
   const lastOrder = {
@@ -47,13 +47,12 @@ export default function LastOrders() {
         <Text style={styles.orderStatus}>{item.status}</Text>
         <Text style={styles.orderNumber}>{item.orderNumber}</Text>
       </View>
-      <Text style={styles.ratePrompt}>Avalie seu pedido:</Text>
       <View style={styles.buttonRow}>
         <TouchableOpacity style={styles.helpButton}>
           <Text style={styles.buttonText}>Ajuda</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addToBagButton}>
-          <Text style={styles.buttonText}>Adicionar à Sacola</Text>
+        <TouchableOpacity style={styles.rateButton}>
+          <Text style={styles.buttonText}>Avalie o pedido</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -63,13 +62,13 @@ export default function LastOrders() {
     <ScrollView style={styles.container}>
       {/* Último Pedido */}
       <View style={styles.lastOrderContainer}>
-        <Text style={styles.sectionTitle}>Peça de Novo</Text>
+        <Text style={styles.sectionTitle}>Loja do último pedido</Text>
         <Image source={{ uri: lastOrder.image }} style={styles.lastOrderImage} />
         <Text style={styles.orderName}>{lastOrder.name}</Text>
         <Text style={styles.orderDetails}>{lastOrder.items}</Text>
         <Text style={styles.orderTotal}>{lastOrder.total}</Text>
         <TouchableOpacity style={styles.addToBagButton}>
-          <Text style={styles.buttonText}>Adicionar à Sacola</Text>
+          <Text style={styles.buttonText}>Visitar loja</Text>
         </TouchableOpacity>
       </View>
 
@@ -192,15 +191,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#ff6f61',
     padding: 10,
     borderRadius: 10,
-    marginRight: 10,
     alignItems: 'center',
-    width: '50%'
+    width: '49%'
   },
-  addToBagButton: {
+  rateButton: {
     backgroundColor: '#3ad3f3',
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
+    width: '49%'
   },
 });
 
