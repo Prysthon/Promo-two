@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function CategorySearch() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
-    { id: '1', name: 'Elétricos', image: 'https://via.placeholder.com/150' },
-    { id: '2', name: 'Hidráulicos', image: 'https://via.placeholder.com/150' },
-    { id: '3', name: 'Ferragens', image: 'https://via.placeholder.com/150' },
-    { id: '4', name: 'Utensílios', image: 'https://via.placeholder.com/150' },
-    { id: '5', name: 'Roupas', image: 'https://via.placeholder.com/150' },
-    { id: '6', name: 'Calçados', image: 'https://via.placeholder.com/150' },
-    { id: '7', name: 'Acessórios', image: 'https://via.placeholder.com/150' },
-    { id: '8', name: 'Alimentos', image: 'https://via.placeholder.com/150' },
-    { id: '9', name: 'Bebidas', image: 'https://via.placeholder.com/150' },
-    { id: '10', name: 'Higiene', image: 'https://via.placeholder.com/150' },
-    { id: '11', name: 'Beleza', image: 'https://via.placeholder.com/150' },
+    { id: '1', name: 'Elétricos', icon: 'bulb-outline' },
+    { id: '2', name: 'Hidráulicos', icon: 'water-outline' },
+    { id: '3', name: 'Ferragens', icon: 'hammer-outline' },
+    { id: '4', name: 'Utensílios', icon: 'restaurant-outline' },
+    { id: '5', name: 'Roupas', icon: 'shirt-outline' },
+    { id: '6', name: 'Calçados', icon: 'walk-outline' },
+    { id: '7', name: 'Acessórios', icon: 'bag-handle-outline' },
+    { id: '8', name: 'Alimentos', icon: 'fast-food-outline' },
+    { id: '9', name: 'Bebidas', icon: 'wine-outline' },
+    { id: '10', name: 'Higiene', icon: 'hand-left-outline' },
+    { id: '11', name: 'Beleza', icon: 'color-palette-outline' },
   ];
 
   const renderCategories = () => {
@@ -24,19 +25,17 @@ export default function CategorySearch() {
       rows.push(
         <View key={i} style={styles.categoryRow}>
           <TouchableOpacity style={styles.categoryItem}>
-            <ImageBackground source={{ uri: categories[i].image }} style={styles.categoryImage} imageStyle={{ borderRadius: 10 }}>
-              <View style={styles.categoryOverlay}>
-                <Text style={styles.categoryName}>{categories[i].name}</Text>
-              </View>
-            </ImageBackground>
+            <View style={styles.categoryIconContainer}>
+              <Icon name={categories[i].icon} size={50} color="#fff" />
+              <Text style={styles.categoryName}>{categories[i].name}</Text>
+            </View>
           </TouchableOpacity>
           {categories[i + 1] && (
             <TouchableOpacity style={styles.categoryItem}>
-              <ImageBackground source={{ uri: categories[i + 1].image }} style={styles.categoryImage} imageStyle={{ borderRadius: 10 }}>
-                <View style={styles.categoryOverlay}>
-                  <Text style={styles.categoryName}>{categories[i + 1].name}</Text>
-                </View>
-              </ImageBackground>
+              <View style={styles.categoryIconContainer}>
+                <Icon name={categories[i + 1].icon} size={50} color="#fff" />
+                <Text style={styles.categoryName}>{categories[i + 1].name}</Text>
+              </View>
             </TouchableOpacity>
           )}
         </View>
@@ -88,24 +87,23 @@ const styles = StyleSheet.create({
   categoryItem: {
     flex: 1,
     marginRight: 10,
-    height: 150,
+    height: 100,
     borderRadius: 10,
     overflow: 'hidden',
+    backgroundColor: '#3ad3f3',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
   },
-  categoryImage: {
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-  categoryOverlay: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    padding: 10,
+  categoryIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   categoryName: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#fff',
     fontWeight: 'bold',
+    marginTop: 5,
   },
   sectionTitle: {
     fontSize: 22,
