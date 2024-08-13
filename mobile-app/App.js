@@ -2,6 +2,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import Login from './screens/Login.js'; 
 import Register from './screens/Register';
@@ -15,7 +16,27 @@ const Tab = createBottomTabNavigator();
 
 function HomeTabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Início') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'Buscar') {
+            iconName = focused ? 'search' : 'search-outline';
+          } else if (route.name === 'Pedidos') {
+            iconName = focused ? 'receipt' : 'receipt-outline';
+          } else if (route.name === 'Perfil') {
+            iconName = focused ? 'person' : 'person-outline';
+          }
+
+          // Você pode retornar qualquer componente aqui!
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: '#3ad3f3',
+      })}
+    >
       <Tab.Screen 
         name="Início" 
         component={Stores} 
@@ -43,7 +64,7 @@ export default function App() {
         <Stack.Screen
           name="Login"
           component={Login}
-          options={{ headerShown: false }} // Remove o header da tela de login
+          options={{ headerShown: false }}
         />
         <Stack.Screen 
           name="Register" 
