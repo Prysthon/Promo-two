@@ -11,6 +11,7 @@ import Stores from './screens/Stores.js';
 import LastOrders from './screens/LastOrders.js';
 import StoresSearch from './screens/StoresSearch.js';
 import EditProfile from './screens/EditProfile.js';
+import Settings from './screens/Settings.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -82,6 +83,14 @@ export default function App() {
           component={EditProfile} 
           options={{
             title: 'Editar Perfil', 
+            headerBackTitle: 'Voltar',
+          }}
+        />
+        <Stack.Screen 
+          name="Settings" 
+          component={Settings} 
+          options={{
+            title: 'Configurações', 
             headerBackTitle: 'Voltar',
           }}
         />

@@ -19,7 +19,10 @@ export default function Profile({ navigation }) {
         >
           <Text style={styles.optionText}>Editar Perfil</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.option}>
+        <TouchableOpacity 
+          style={styles.option}
+          onPress={() => navigation.navigate('Settings')}
+        >
           <Text style={styles.optionText}>Configurações</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.option}>
