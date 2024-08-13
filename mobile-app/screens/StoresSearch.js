@@ -49,7 +49,7 @@ export default function CategorySearch() {
     <ScrollView style={styles.container}>
       <TextInput
         style={styles.searchInput}
-        placeholder="Buscar categoria..."
+        placeholder="Buscar produtos..."
         placeholderTextColor="#666"
         value={searchQuery}
         onChangeText={(text) => setSearchQuery(text)}
