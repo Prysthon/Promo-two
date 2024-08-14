@@ -31,13 +31,16 @@ export default function Profile({ navigation }) {
         >
           <Text style={styles.optionText}>Histórico de Compras</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.option}>
-          <Text 
-            style={styles.optionText}
-            onPress={() => navigation.navigate('PaymentMethods')}
-          >Pagamentos</Text>
+        <TouchableOpacity 
+          style={styles.option}
+          onPress={() => navigation.navigate('PaymentMethods')}
+        >
+          <Text style={styles.optionText}>Pagamentos</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.option}>
+        <TouchableOpacity 
+          style={styles.option}
+          onPress={() => navigation.navigate('Addresses')}
+        >
           <Text style={styles.optionText}>Endereços</Text>
         </TouchableOpacity>
         <TouchableOpacity 

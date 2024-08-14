@@ -14,6 +14,7 @@ import EditProfile from './screens/EditProfile.js';
 import Settings from './screens/Settings.js';
 import PurchaseHistory from './screens/PurchaseHistory.js';
 import PaymentMethods from './screens/PaymentMethods.js';
+import Addresses from './screens/Addresses.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -109,6 +110,14 @@ export default function App() {
           component={PaymentMethods} 
           options={{
             title: 'Formas de Pagamento', 
+            headerBackTitle: 'Voltar',
+          }}
+        />
+        <Stack.Screen 
+          name="Addresses" 
+          component={Addresses} 
+          options={{
+            title: 'Endereços', 
             headerBackTitle: 'Voltar',
           }}
         />
