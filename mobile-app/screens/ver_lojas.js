@@ -1,7 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function VerLojas() {
+  const navigation = useNavigation();
+
   const lojas_destacadas = [
     { id: '1', nome: 'Restaurante X', imagem: 'https://via.placeholder.com/100' },
     { id: '2', nome: 'Restaurante Y', imagem: 'https://via.placeholder.com/100' },
@@ -29,12 +32,14 @@ export default function VerLojas() {
     const estilo_texto_geral = item.aberta ? styles.texto_geral : [styles.texto_geral, { color: '#808080' }];
 
     return (
-      <View style={estilo_container}>
-        <Image source={{ uri: item.imagem }} style={estilo_imagem} />
-        <Text style={estilo_texto_nome}>{item.nome}</Text>
-        <Text style={estilo_texto_geral}>{`${item.estrelas} ⭐ | ${item.tipo} | ${item.distancia}`}</Text>
-        <Text style={estilo_texto_geral}>{item.tempo_espera}</Text>
-      </View>
+      <TouchableOpacity onPress={() => navigation.navigate('Produtos', { lojaId: item.id })}>
+        <View style={estilo_container}>
+          <Image source={{ uri: item.imagem }} style={estilo_imagem} />
+          <Text style={estilo_texto_nome}>{item.nome}</Text>
+          <Text style={estilo_texto_geral}>{`${item.estrelas} ⭐ | ${item.tipo} | ${item.distancia}`}</Text>
+          <Text style={estilo_texto_geral}>{item.tempo_espera}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
