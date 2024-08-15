@@ -5,12 +5,11 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function ProdutosLoja({ route }) {
   const { lojaId } = route.params;
-  const navigation = useNavigation(); // Hook de navegação
+  const navigation = useNavigation();
 
-  // Estado para o carrinho
   const [carrinho, setCarrinho] = useState([]);
+  const [exibirPromocoes, setExibirPromocoes] = useState(true); // Estado para controlar qual aba está ativa
 
-  // Dados da loja simulados
   const loja = {
     id: '1',
     nome: 'Loja A',
@@ -24,27 +23,25 @@ export default function ProdutosLoja({ route }) {
     imagem: 'https://via.placeholder.com/100',
     categorias: {
       Elétricos: [
-        { id: '1', nome: 'Furadeira', preco: 'R$ 150,00', imagem: 'https://via.placeholder.com/80', descricao: 'Furadeira de alta potência para uso profissional.' },
-        { id: '2', nome: 'Parafusadeira', preco: 'R$ 200,00', imagem: 'https://via.placeholder.com/80', descricao: 'Parafusadeira compacta com bateria de longa duração.' },
+        { id: '1', nome: 'Furadeira', preco: 'R$ 150,00', promocao: 'R$ 120,00', imagem: 'https://via.placeholder.com/80', descricao: 'Furadeira de alta potência para uso profissional.', emPromocao: true },
+        { id: '2', nome: 'Parafusadeira', preco: 'R$ 200,00', imagem: 'https://via.placeholder.com/80', descricao: 'Parafusadeira compacta com bateria de longa duração.', emPromocao: false },
       ],
       Hidráulicos: [
-        { id: '3', nome: 'Torneira', preco: 'R$ 50,00', imagem: 'https://via.placeholder.com/80', descricao: 'Torneira de alta qualidade, ideal para cozinhas e banheiros.' },
-        { id: '4', nome: 'Mangueira', preco: 'R$ 30,00', imagem: 'https://via.placeholder.com/80', descricao: 'Mangueira resistente para jardinagem e outras utilidades.' },
+        { id: '3', nome: 'Torneira', preco: 'R$ 50,00', imagem: 'https://via.placeholder.com/80', descricao: 'Torneira de alta qualidade, ideal para cozinhas e banheiros.', emPromocao: false },
+        { id: '4', nome: 'Mangueira', preco: 'R$ 30,00', promocao: 'R$ 25,00', imagem: 'https://via.placeholder.com/80', descricao: 'Mangueira resistente para jardinagem e outras utilidades.', emPromocao: true },
       ],
       Alimentos: [
-        { id: '5', nome: 'Arroz', preco: 'R$ 20,00', imagem: 'https://via.placeholder.com/80', descricao: 'Arroz de alta qualidade, ideal para refeições em família.' },
-        { id: '6', nome: 'Feijão', preco: 'R$ 10,00', imagem: 'https://via.placeholder.com/80', descricao: 'Feijão selecionado, pronto para o preparo.' },
+        { id: '5', nome: 'Arroz', preco: 'R$ 20,00', imagem: 'https://via.placeholder.com/80', descricao: 'Arroz de alta qualidade, ideal para refeições em família.', emPromocao: false },
+        { id: '6', nome: 'Feijão', preco: 'R$ 10,00', imagem: 'https://via.placeholder.com/80', descricao: 'Feijão selecionado, pronto para o preparo.', emPromocao: false },
       ],
     },
   };
 
-  // Função para adicionar um item ao carrinho
   const adicionarAoCarrinho = (item) => {
     setCarrinho([...carrinho, item]);
     alert(`${item.nome} adicionado ao carrinho`);
   };
 
-  // Renderização das categorias para o scroll horizontal
   const renderizarCategorias = () => {
     return (
       <FlatList
@@ -63,35 +60,46 @@ export default function ProdutosLoja({ route }) {
     );
   };
 
-  // Renderização dos produtos por categoria
-  const renderizarProdutosPorCategoria = (categoria) => (
-    <View key={categoria} style={styles.categoria_section}>
-      <Text style={styles.categoria_titulo}>{categoria}</Text>
-      <FlatList
-        data={loja.categorias[categoria]}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item_produto}
-            onPress={() => navigation.navigate('DetalhesProduto', { produto: item })}
-          >
-            <Image source={{ uri: item.imagem }} style={styles.imagem_produto} />
-            <Text style={styles.nome_produto}>{item.nome}</Text>
-            <Text style={styles.preco_produto}>{item.preco}</Text>
-            <TouchableOpacity style={styles.botao_adicionar} onPress={() => adicionarAoCarrinho(item)}>
-              <Ionicons name="add" size={24} color="#fff" />
+  const renderizarProdutosPorCategoria = (categoria) => {
+    const produtos = loja.categorias[categoria].filter((produto) => (exibirPromocoes ? produto.emPromocao : true));
+
+    if (produtos.length === 0) return null;
+
+    return (
+      <View key={categoria} style={styles.categoria_section}>
+        <Text style={styles.categoria_titulo}>{categoria}</Text>
+        <FlatList
+          data={produtos}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.item_produto}
+              onPress={() => navigation.navigate('DetalhesProduto', { produto: item })}
+            >
+              <Image source={{ uri: item.imagem }} style={styles.imagem_produto} />
+              <Text style={styles.nome_produto}>{item.nome}</Text>
+              {item.emPromocao ? (
+                <View>
+                  <Text style={styles.preco_promocao}>{item.promocao} </Text>
+                  <Text style={styles.preco_original}>{item.preco}</Text>
+                </View>
+              ) : (
+                <Text style={styles.preco_produto}>{item.preco}</Text>
+              )}
+              <TouchableOpacity style={styles.botao_adicionar} onPress={() => adicionarAoCarrinho(item)}>
+                <Ionicons name="add" size={24} color="#fff" />
+              </TouchableOpacity>
             </TouchableOpacity>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item.id}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      />
-    </View>
-  );
+          )}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+    );
+  };
 
   return (
     <ScrollView style={styles.container}>
-      {/* Header com informações da loja */}
       <View style={styles.header}>
         <View style={styles.info_loja}>
           <Text style={styles.nome_loja}>{loja.nome}</Text>
@@ -101,29 +109,39 @@ export default function ProdutosLoja({ route }) {
         <Image source={{ uri: loja.imagem }} style={styles.imagem_loja} />
       </View>
 
-      {/* Ícone com número de avaliações */}
       <View style={styles.avaliacoes}>
         <Ionicons name="star" size={20} color="#ffd700" />
         <Text style={styles.numero_avaliacoes}>{loja.numero_avaliacoes} avaliações</Text>
       </View>
 
-      {/* Informações adicionais */}
       <View style={styles.info_adicional}>
-        {/* <Text style={styles.texto_info}>Agendamento: {loja.agendamento}</Text> */}
         <Text style={styles.texto_info}>Tempo: {loja.tempo_espera} | Preço: {loja.preco_entrega}</Text>
       </View>
 
-      {/* Campo de busca */}
       <View style={styles.campo_busca}>
         <Ionicons name="search" size={20} color="#888" />
         <TextInput placeholder="Buscar item ou produto" style={styles.input_busca} />
       </View>
 
-      {/* Scroll horizontal para categorias */}
+      {/* Botões para alternar entre promoção e todos os produtos */}
+      <View style={styles.botoesFiltro}>
+        <TouchableOpacity
+          style={[styles.botaoFiltro, exibirPromocoes && styles.botaoAtivo]}
+          onPress={() => setExibirPromocoes(true)}
+        >
+          <Text style={[styles.textoBotao, exibirPromocoes && styles.textoBotaoAtivo]}>Promoção</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.botaoFiltro, !exibirPromocoes && styles.botaoAtivo]}
+          onPress={() => setExibirPromocoes(false)}
+        >
+          <Text style={[styles.textoBotao, !exibirPromocoes && styles.textoBotaoAtivo]}>Padrão</Text>
+        </TouchableOpacity>
+      </View>
+
       <Text style={styles.categoria_titulo}>Categorias</Text>
       {renderizarCategorias()}
 
-      {/* Produtos divididos por categorias */}
       {Object.keys(loja.categorias).map(renderizarProdutosPorCategoria)}
     </ScrollView>
   );
@@ -194,6 +212,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     flex: 1,
   },
+  botoesFiltro: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    justifyContent: 'space-between',
+  },
+  botaoFiltro: {
+    flex: 1,
+    padding: 10,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginRight: 5,
+  },
+  botaoAtivo: {
+    backgroundColor: '#3ad3f3',
+  },
+  textoBotao: {
+    fontSize: 16,
+    color: '#3ad3f3',
+  },
+  textoBotaoAtivo: {
+    color: '#fff',
+  },
   categorias_container: {
     marginBottom: 20,
   },
@@ -231,11 +273,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 1.41,
-    position: 'relative', 
+    position: 'relative',
     marginBottom: 3,
     marginTop: 3,
     marginLeft: 3,
     width: 130,
+    height: 160,
   },
   imagem_produto: {
     width: 80,
@@ -253,9 +296,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#777',
   },
+  preco_promocao: {
+    fontSize: 14,
+    color: '#d9534f',
+    fontWeight: 'bold',
+  },
+  preco_original: {
+    textDecorationLine: 'line-through',
+    fontSize: 12,
+    color: '#999',
+    marginLeft: 5,
+  },
   botao_adicionar: {
     position: 'absolute',
-    bottom: 50,
+    bottom: 65,
     right: 10,
     backgroundColor: '#3ad3f3',
     width: 35,
