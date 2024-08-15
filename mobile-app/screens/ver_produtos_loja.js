@@ -109,7 +109,7 @@ export default function ProdutosLoja({ route }) {
 
       {/* Informações adicionais */}
       <View style={styles.info_adicional}>
-        <Text style={styles.texto_info}>Agendamento: {loja.agendamento}</Text>
+        {/* <Text style={styles.texto_info}>Agendamento: {loja.agendamento}</Text> */}
         <Text style={styles.texto_info}>Tempo: {loja.tempo_espera} | Preço: {loja.preco_entrega}</Text>
       </View>
 
