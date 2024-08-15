@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Login from './screens/Login.js'; 
 import Register from './screens/Register';
 import Profile from './screens/Profile.js';
-import Stores from './screens/Stores.js';
+import VerLojas from './screens/ver_lojas.js';
 import LastOrders from './screens/LastOrders.js';
 import StoresSearch from './screens/StoresSearch.js';
 import EditProfile from './screens/EditProfile.js';
@@ -44,7 +44,7 @@ function HomeTabs() {
     >
       <Tab.Screen 
         name="Início" 
-        component={Stores} 
+        component={VerLojas} 
       />
       <Tab.Screen 
         name="Buscar" 
