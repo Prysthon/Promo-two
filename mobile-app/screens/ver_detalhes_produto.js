@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     color: '#777',
   },
   botao_adicionar_sacola: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#3ad3f3',
     paddingVertical: 15,
     borderRadius: 5,
     alignItems: 'center',
