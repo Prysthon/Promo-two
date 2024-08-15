@@ -16,6 +16,7 @@ import PurchaseHistory from './screens/PurchaseHistory.js';
 import PaymentMethods from './screens/PaymentMethods.js';
 import Addresses from './screens/Addresses.js';
 import VerProdutosLoja from './screens/ver_produtos_loja.js';
+import VerDetalhesProduto from './screens/ver_detalhes_produto.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -127,6 +128,14 @@ export default function App() {
           component={VerProdutosLoja} 
           options={{
             title: 'Produtos', 
+            headerBackTitle: 'Voltar',
+          }}
+        />
+        <Stack.Screen 
+          name="DetalhesProduto" 
+          component={VerDetalhesProduto} 
+          options={{
+            title: 'Produto', 
             headerBackTitle: 'Voltar',
           }}
         />

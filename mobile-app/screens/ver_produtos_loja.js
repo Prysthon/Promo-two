@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, FlatList, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ProdutosLoja({ route }) {
   const { lojaId } = route.params;
+  const navigation = useNavigation(); // Hook de navegação
 
   // Estado para o carrinho
   const [carrinho, setCarrinho] = useState([]);
@@ -22,16 +24,16 @@ export default function ProdutosLoja({ route }) {
     imagem: 'https://via.placeholder.com/100',
     categorias: {
       Elétricos: [
-        { id: '1', nome: 'Furadeira', preco: 'R$ 150,00', imagem: 'https://via.placeholder.com/80' },
-        { id: '2', nome: 'Parafusadeira', preco: 'R$ 200,00', imagem: 'https://via.placeholder.com/80' },
+        { id: '1', nome: 'Furadeira', preco: 'R$ 150,00', imagem: 'https://via.placeholder.com/80', descricao: 'Furadeira de alta potência para uso profissional.' },
+        { id: '2', nome: 'Parafusadeira', preco: 'R$ 200,00', imagem: 'https://via.placeholder.com/80', descricao: 'Parafusadeira compacta com bateria de longa duração.' },
       ],
       Hidráulicos: [
-        { id: '3', nome: 'Torneira', preco: 'R$ 50,00', imagem: 'https://via.placeholder.com/80' },
-        { id: '4', nome: 'Mangueira', preco: 'R$ 30,00', imagem: 'https://via.placeholder.com/80' },
+        { id: '3', nome: 'Torneira', preco: 'R$ 50,00', imagem: 'https://via.placeholder.com/80', descricao: 'Torneira de alta qualidade, ideal para cozinhas e banheiros.' },
+        { id: '4', nome: 'Mangueira', preco: 'R$ 30,00', imagem: 'https://via.placeholder.com/80', descricao: 'Mangueira resistente para jardinagem e outras utilidades.' },
       ],
       Alimentos: [
-        { id: '5', nome: 'Arroz', preco: 'R$ 20,00', imagem: 'https://via.placeholder.com/80' },
-        { id: '6', nome: 'Feijão', preco: 'R$ 10,00', imagem: 'https://via.placeholder.com/80' },
+        { id: '5', nome: 'Arroz', preco: 'R$ 20,00', imagem: 'https://via.placeholder.com/80', descricao: 'Arroz de alta qualidade, ideal para refeições em família.' },
+        { id: '6', nome: 'Feijão', preco: 'R$ 10,00', imagem: 'https://via.placeholder.com/80', descricao: 'Feijão selecionado, pronto para o preparo.' },
       ],
     },
   };
@@ -68,14 +70,17 @@ export default function ProdutosLoja({ route }) {
       <FlatList
         data={loja.categorias[categoria]}
         renderItem={({ item }) => (
-          <View style={styles.item_produto}>
+          <TouchableOpacity
+            style={styles.item_produto}
+            onPress={() => navigation.navigate('DetalhesProduto', { produto: item })}
+          >
             <Image source={{ uri: item.imagem }} style={styles.imagem_produto} />
             <Text style={styles.nome_produto}>{item.nome}</Text>
             <Text style={styles.preco_produto}>{item.preco}</Text>
             <TouchableOpacity style={styles.botao_adicionar} onPress={() => adicionarAoCarrinho(item)}>
               <Ionicons name="add" size={24} color="#fff" />
             </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id}
         horizontal
@@ -106,7 +111,6 @@ export default function ProdutosLoja({ route }) {
       <View style={styles.info_adicional}>
         <Text style={styles.texto_info}>Agendamento: {loja.agendamento}</Text>
         <Text style={styles.texto_info}>Tempo: {loja.tempo_espera} | Preço: {loja.preco_entrega}</Text>
-        {/* <Text style={styles.texto_info}>{loja.entrega_gratis}</Text> */}
       </View>
 
       {/* Campo de busca */}
