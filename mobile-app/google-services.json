@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "488120371008",
+    "project_id": "projetopromomais",
+    "storage_bucket": "projetopromomais.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488120371008:android:aaf5680f400b985d221ca5",
+        "android_client_info": {
+          "package_name": "com.cogittconsultoria.promo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnTTm2-67jVFT9aScpOA7YM_rUiCpA8d0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
