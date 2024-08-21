@@ -1,4 +1,4 @@
-package com.promo
+package com.cogittconsultoria.promo
 
 import android.os.Build
 import android.os.Bundle

@@ -1,51 +1,40 @@
 import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
+import * as Device from 'expo-device';
 import { Platform } from 'react-native';
 
-// Configurações das notificações para Android
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+const PROJECT_ID = 'projetopromomais'; // Substitua pelo seu projectId
 
-export async function registrarTokenNotificacao(usuarioId) {
-  const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-  let finalStatus = existingStatus;
+export async function registerForPushNotificationsAsync() {
+  let token;
 
-  if (existingStatus !== 'granted') {
-    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-    finalStatus = status;
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+
+    token = (await Notifications.getExpoPushTokenAsync({ projectId: PROJECT_ID })).data;
+    console.log('Expo Push Token:', token); // Verifique o token
+
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  } else {
+    alert('Must use physical device for Push Notifications');
   }
 
-  if (finalStatus !== 'granted') {
-    console.log('Permissão para notificações não foi concedida');
-    return;
-  }
-
-  const token = (await Notifications.getExpoPushTokenAsync()).data;
-
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
-
-  // Envia o token para o servidor Django
-  fetch('https://seu-dominio.com/api/registrar-token/', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      usuario_id: usuarioId,
-      token_expo: token,
-    }),
-  });
+  return token;
 }

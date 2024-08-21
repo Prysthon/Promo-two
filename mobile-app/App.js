@@ -1,22 +1,28 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Linking, ActivityIndicator, Alert } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
+import firebase from '@react-native-firebase/app';
 
-import Login from './screens/Login.js'; 
-import Register from './screens/Register';
-import Profile from './screens/Profile.js';
-import VerLojas from './screens/ver_lojas.js';
-import LastOrders from './screens/LastOrders.js';
-import StoresSearch from './screens/StoresSearch.js';
-import EditProfile from './screens/EditProfile.js';
-import Settings from './screens/Settings.js';
-import PurchaseHistory from './screens/PurchaseHistory.js';
-import PaymentMethods from './screens/PaymentMethods.js';
-import Addresses from './screens/Addresses.js';
-import VerProdutosLoja from './screens/ver_produtos_loja.js';
-import VerDetalhesProduto from './screens/ver_detalhes_produto.js';
+import Login from './src/screens/Login.js'; 
+import Register from './src/screens/Register.js';
+import Profile from './src/screens/Profile.js';
+import VerLojas from './src/screens/ver_lojas.js';
+import LastOrders from './src/screens/LastOrders.js';
+import StoresSearch from './src/screens/StoresSearch.js';
+import EditProfile from './src/screens/EditProfile.js';
+import Settings from './src/screens/Settings.js';
+import PurchaseHistory from './src/screens/PurchaseHistory.js';
+import PaymentMethods from './src/screens/PaymentMethods.js';
+import Addresses from './src/screens/Addresses.js';
+import VerProdutosLoja from './src/screens/ver_produtos_loja.js';
+import VerDetalhesProduto from './src/screens/ver_detalhes_produto.js';
+import { registerForPushNotificationsAsync } from './src/notificacoes.js';
+
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -65,6 +71,63 @@ function HomeTabs() {
 }
 
 export default function App() {
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED || 
+      authStatus === messaging-AuthorizationStatus. PROVISIONAL;
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+  }
+
+  useEffect (() => {
+    if(requestUserPermission()) {
+      const getToken = async () => {
+        await messaging().registerDeviceForRemoteMessages();
+        await messaging().getToken().then(token => {
+          console.log(token);
+        });
+      }
+      getToken()
+    } else {
+      console.log('failed token status', authStatus);
+    }
+
+    const getInicialNotificacao = async () => {
+      await messaging().getInitialNotification().then(async (remoteMessage) => {
+        if(remoteMessage) {
+          console.log(
+            'notification caused app to open from quit state:',
+            remoteMessage.notification
+          );
+        }
+      });
+    }
+    getInicialNotificacao();
+
+    const getNotificacaoAppAberto = async () => {
+      messaging().onNotificationOpenedApp(async (remoteMessage) => {
+        console.log(
+          'notification caused app to open from quit state:',
+          remoteMessage.notification
+        );
+      });
+    }
+    getNotificacaoAppAberto();
+
+    // Register background handler
+    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      console.log('Message handled in the background!', remoteMessage);
+    });
+
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">

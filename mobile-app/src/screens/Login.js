@@ -1,49 +1,7 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from "react-native";
-import * as Notifications from 'expo-notifications';
-import React, { useEffect, useRef } from 'react';
-
-// Configura o comportamento das notificações quando o app está em primeiro plano
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
-
+import React from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 
 export default function Login({ navigation }) {
-
-  const notificationListener = useRef();
-  const responseListener = useRef();
-
-  useEffect(() => {
-    // Solicitar permissões para notificações
-    async function obterPermissoesNotificacoes() {
-      const { status } = await Notifications.getPermissionsAsync();
-      if (status !== 'granted') {
-        await Notifications.requestPermissionsAsync();
-      }
-    }
-
-    obterPermissoesNotificacoes();
-
-    // Listener para notificações recebidas enquanto o app está em primeiro plano
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      console.log('Notificação recebida:', notification);
-    });
-
-    // Listener para quando o usuário clica na notificação
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log('Usuário interagiu com a notificação:', response);
-    });
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
-  
   return (
     <View style={styles.container}>
       <View style={styles.header}>

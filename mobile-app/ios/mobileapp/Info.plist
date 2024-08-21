@@ -27,7 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.promo</string>
+          <string>com.cogittconsultoria.promo</string>
         </array>
       </dict>
     </array>
