@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Linking, ActivityIndicator, Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import firebase from '@react-native-firebase/app';
+import axios from 'axios';
 
 import Login from './src/screens/Login.js'; 
 import Register from './src/screens/Register.js';
@@ -81,11 +82,24 @@ export default function App() {
     }
   }
 
+  const sendTokenToServer = async (token) => {
+    try {
+      const response = await axios.post('http://localhost/register-token/', {
+        token: token,
+      });
+      console.log('Token enviado com sucesso:', response.data);
+    } catch (error) {
+      console.error('Erro ao enviar o token:', error);
+    }
+  };
+  
+
   useEffect (() => {
     if(requestUserPermission()) {
       const getToken = async () => {
         await messaging().registerDeviceForRemoteMessages();
         await messaging().getToken().then(token => {
+          sendTokenToServer(token)
           console.log(token);
         });
       }
