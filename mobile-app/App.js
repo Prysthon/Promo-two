@@ -4,8 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Linking, ActivityIndicator, Alert } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
-import firebase from '@react-native-firebase/app';
+// import messaging from '@react-native-firebase/messaging';
+// import firebase from '@react-native-firebase/app';
 import axios from 'axios';
 
 import Login from './src/screens/Login.js'; 
@@ -23,7 +23,28 @@ import VerProdutosLoja from './src/screens/ver_produtos_loja.js';
 import VerDetalhesProduto from './src/screens/ver_detalhes_produto.js';
 import { registerForPushNotificationsAsync } from './src/notificacoes.js';
 
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
+import '@react-native-firebase/firestore';
 
+const RNfirebaseConfig = {
+  apiKey: "........",
+  authDomain: "note-app-rn.firebaseapp.com",
+  projectId: "note-app-rn",
+  storageBucket: "note-app-rn.appspot.com",
+  messagingSenderId: ".....",
+  appId: "......"
+};
+
+let app;
+if (firebase.apps.length === 0) {
+    app = firebase.initializeApp(RNfirebaseConfig )
+} else {
+    app = firebase.app()
+}
+
+const db = firebase.firestore();
+const auth = firebase.auth();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -84,63 +105,74 @@ export default function App() {
 
   const sendTokenToServer = async (token) => {
     try {
-      const response = await axios.post('http://localhost/register-token/', {
+      const response = await axios.post('http://10.0.2.2:80/register-token/', {
         token: token,
       });
       console.log('Token enviado com sucesso:', response.data);
     } catch (error) {
-      console.error('Erro ao enviar o token:', error);
+      if (error.response) {
+        // O servidor respondeu com um status fora do alcance de 2xx
+        console.error('Resposta do servidor:', error.response.data);
+        console.error('Status:', error.response.status);
+        console.error('Headers:', error.response.headers);
+      } else if (error.request) {
+        // A requisição foi feita mas não houve resposta
+        console.error('Sem resposta do servidor:', error.request);
+      } else {
+        // Algo aconteceu ao configurar a requisição
+        console.error('Erro:', error.message);
+      }
     }
   };
   
 
-  useEffect (() => {
-    if(requestUserPermission()) {
-      const getToken = async () => {
-        await messaging().registerDeviceForRemoteMessages();
-        await messaging().getToken().then(token => {
-          sendTokenToServer(token)
-          console.log(token);
-        });
-      }
-      getToken()
-    } else {
-      console.log('failed token status', authStatus);
-    }
+  // useEffect (() => {
+  //   if(requestUserPermission()) {
+  //     const getToken = async () => {
+  //       await messaging().registerDeviceForRemoteMessages();
+  //       await messaging().getToken().then(token => {
+  //         sendTokenToServer(token)
+  //         console.log(token);
+  //       });
+  //     }
+  //     getToken()
+  //   } else {
+  //     console.log('failed token status', authStatus);
+  //   }
 
-    const getInicialNotificacao = async () => {
-      await messaging().getInitialNotification().then(async (remoteMessage) => {
-        if(remoteMessage) {
-          console.log(
-            'notification caused app to open from quit state:',
-            remoteMessage.notification
-          );
-        }
-      });
-    }
-    getInicialNotificacao();
+    // const getInicialNotificacao = async () => {
+    //   await messaging().getInitialNotification().then(async (remoteMessage) => {
+    //     if(remoteMessage) {
+    //       console.log(
+    //         'notification caused app to open from quit state:',
+    //         remoteMessage.notification
+    //       );
+    //     }
+    //   });
+    // }
+    // getInicialNotificacao();
 
-    const getNotificacaoAppAberto = async () => {
-      messaging().onNotificationOpenedApp(async (remoteMessage) => {
-        console.log(
-          'notification caused app to open from quit state:',
-          remoteMessage.notification
-        );
-      });
-    }
-    getNotificacaoAppAberto();
+    // const getNotificacaoAppAberto = async () => {
+    //   messaging().onNotificationOpenedApp(async (remoteMessage) => {
+    //     console.log(
+    //       'notification caused app to open from quit state:',
+    //       remoteMessage.notification
+    //     );
+    //   });
+    // }
+    // getNotificacaoAppAberto();
 
-    // Register background handler
-    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-      console.log('Message handled in the background!', remoteMessage);
-    });
+  //   // Register background handler
+  //   messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  //     console.log('Message handled in the background!', remoteMessage);
+  //   });
 
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  //   });
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
   return (
     <NavigationContainer>
