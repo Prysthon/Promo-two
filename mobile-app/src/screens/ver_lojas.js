@@ -44,24 +44,41 @@ export default function VerLojas() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.titulo_secao}>Produtos em Destaque</Text>
-      <FlatList
-        data={lojas_destacadas}
-        renderItem={renderizarLojasDestacadas}
-        keyExtractor={(item) => item.id}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.lista_horizontal}
-      />
+    <View style={styles.container}>
+      <ScrollView>
+        <Text style={styles.titulo_secao}>Produtos em Destaque</Text>
+        <FlatList
+          data={lojas_destacadas}
+          renderItem={renderizarLojasDestacadas}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.lista_horizontal}
+        />
 
-      <Text style={styles.titulo_secao}>Lojas</Text>
-      {lojas.map((loja) => (
-        <View key={loja.id}>
-          {renderizarLojas({ item: loja })}
+        <Text style={styles.titulo_secao}>Lojas</Text>
+        {lojas.map((loja) => (
+          <View key={loja.id}>
+            {renderizarLojas({ item: loja })}
+          </View>
+        ))}
+      </ScrollView>
+      
+      {/* Botão Adicionar ao Carrinho */}
+      <View style={styles.botao_adicionar_carrinho}>
+        <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.imagem_loja_botao} />
+        <View style={styles.informacoes_carrinho}>
+          <Text style={styles.texto_total}>Total sem taxa</Text>
+          <Text style={styles.texto_preco}>R$ 49,98 / 3 itens</Text>
         </View>
-      ))}
-    </ScrollView>
+        <TouchableOpacity
+          style={styles.botao_finalizar_compra}
+          onPress={() => navigation.navigate('Carrinho')}
+        >
+          <Text style={styles.texto_botao_finalizar_compra}>Ver Carrinho</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
@@ -69,17 +86,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
-    paddingHorizontal: 15,
-    paddingTop: 20,
   },
   titulo_secao: {
     fontSize: 22,
     fontWeight: 'bold',
     color: '#000000',
     marginBottom: 10,
+    paddingHorizontal: 15,
   },
   lista_horizontal: {
     marginBottom: 20,
+    paddingLeft: 15,
   },
   item_horizontal: {
     alignItems: 'center',
@@ -101,6 +118,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
+    marginHorizontal: 15,
     position: 'relative',
   },
   item_fechado: {
@@ -125,4 +143,46 @@ const styles = StyleSheet.create({
     color: '#000000',
     marginBottom: 5,
   },
+  // Estilos do Botão Adicionar ao Carrinho
+  botao_adicionar_carrinho: {
+    flexDirection: 'row',
+    backgroundColor: '#3ad3f3',
+    padding: 15,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  imagem_loja_botao: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  informacoes_carrinho: {
+    flex: 1,
+    marginLeft: 15,
+  },
+  texto_total: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  texto_preco: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  botao_finalizar_compra: {
+    backgroundColor: '#ffffff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+  },
+  texto_botao_finalizar_compra: {
+    color: '#3ad3f3',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
+

@@ -4,8 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Linking, ActivityIndicator, Alert } from 'react-native';
-// import messaging from '@react-native-firebase/messaging';
-// import firebase from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging';
+import firebase from '@react-native-firebase/app';
 import axios from 'axios';
 
 import Login from './src/screens/Login.js'; 
@@ -22,29 +22,30 @@ import Addresses from './src/screens/Addresses.js';
 import VerProdutosLoja from './src/screens/ver_produtos_loja.js';
 import VerDetalhesProduto from './src/screens/ver_detalhes_produto.js';
 import { registerForPushNotificationsAsync } from './src/notificacoes.js';
+import VerCarrinho from './src/screens/ver_carrinho.js';
 
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/auth';
-import '@react-native-firebase/firestore';
+// import firebase from '@react-native-firebase/app';
+// import '@react-native-firebase/auth';
+// import '@react-native-firebase/firestore';
 
-const RNfirebaseConfig = {
-  apiKey: "........",
-  authDomain: "note-app-rn.firebaseapp.com",
-  projectId: "note-app-rn",
-  storageBucket: "note-app-rn.appspot.com",
-  messagingSenderId: ".....",
-  appId: "......"
-};
+// const RNfirebaseConfig = {
+//   apiKey: "........",
+//   authDomain: "note-app-rn.firebaseapp.com",
+//   projectId: "note-app-rn",
+//   storageBucket: "note-app-rn.appspot.com",
+//   messagingSenderId: ".....",
+//   appId: "......"
+// };
 
-let app;
-if (firebase.apps.length === 0) {
-    app = firebase.initializeApp(RNfirebaseConfig )
-} else {
-    app = firebase.app()
-}
+// let app;
+// if (firebase.apps.length === 0) {
+//     app = firebase.initializeApp(RNfirebaseConfig )
+// } else {
+//     app = firebase.app()
+// }
 
-const db = firebase.firestore();
-const auth = firebase.auth();
+// const db = firebase.firestore();
+// const auth = firebase.auth();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -126,53 +127,53 @@ export default function App() {
   };
   
 
-  // useEffect (() => {
-  //   if(requestUserPermission()) {
-  //     const getToken = async () => {
-  //       await messaging().registerDeviceForRemoteMessages();
-  //       await messaging().getToken().then(token => {
-  //         sendTokenToServer(token)
-  //         console.log(token);
-  //       });
-  //     }
-  //     getToken()
-  //   } else {
-  //     console.log('failed token status', authStatus);
-  //   }
+  useEffect (() => {
+    if(requestUserPermission()) {
+      const getToken = async () => {
+        await messaging().registerDeviceForRemoteMessages();
+        await messaging().getToken().then(token => {
+          sendTokenToServer(token)
+          console.log(token);
+        });
+      }
+      getToken()
+    } else {
+      console.log('failed token status', authStatus);
+    }
 
-    // const getInicialNotificacao = async () => {
-    //   await messaging().getInitialNotification().then(async (remoteMessage) => {
-    //     if(remoteMessage) {
-    //       console.log(
-    //         'notification caused app to open from quit state:',
-    //         remoteMessage.notification
-    //       );
-    //     }
-    //   });
-    // }
-    // getInicialNotificacao();
+    const getInicialNotificacao = async () => {
+      await messaging().getInitialNotification().then(async (remoteMessage) => {
+        if(remoteMessage) {
+          console.log(
+            'notification caused app to open from quit state:',
+            remoteMessage.notification
+          );
+        }
+      });
+    }
+    getInicialNotificacao();
 
-    // const getNotificacaoAppAberto = async () => {
-    //   messaging().onNotificationOpenedApp(async (remoteMessage) => {
-    //     console.log(
-    //       'notification caused app to open from quit state:',
-    //       remoteMessage.notification
-    //     );
-    //   });
-    // }
-    // getNotificacaoAppAberto();
+    const getNotificacaoAppAberto = async () => {
+      messaging().onNotificationOpenedApp(async (remoteMessage) => {
+        console.log(
+          'notification caused app to open from quit state:',
+          remoteMessage.notification
+        );
+      });
+    }
+    getNotificacaoAppAberto();
 
-  //   // Register background handler
-  //   messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  //     console.log('Message handled in the background!', remoteMessage);
-  //   });
+    // Register background handler
+    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      console.log('Message handled in the background!', remoteMessage);
+    });
 
-  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
-  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-  //   });
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
 
-  //   return unsubscribe;
-  // }, []);
+    return unsubscribe;
+  }, []);
 
   return (
     <NavigationContainer>
@@ -245,6 +246,14 @@ export default function App() {
           component={VerDetalhesProduto} 
           options={{
             title: 'Produto', 
+            headerBackTitle: 'Voltar',
+          }}
+        />
+        <Stack.Screen 
+          name="Carrinho" 
+          component={VerCarrinho} 
+          options={{
+            title: 'Carrinho', 
             headerBackTitle: 'Voltar',
           }}
         />
