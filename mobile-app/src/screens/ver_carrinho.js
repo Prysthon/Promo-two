@@ -7,15 +7,15 @@ export default function VerCarrinho() {
 
   // Simulação de produtos adicionados ao carrinho
   const [produtos, setProdutos] = useState([
-    { id: '1', nome: 'Produto A', imagem: 'https://via.placeholder.com/100', preco: 29.99, quantidade: 1 },
-    { id: '2', nome: 'Produto B', imagem: 'https://via.placeholder.com/100', preco: 19.99, quantidade: 2 },
+    { id: '1', nome: 'Produto A', imagem: 'https://via.placeholder.com/80', preco: 29.99, quantidade: 1 },
+    { id: '2', nome: 'Produto B', imagem: 'https://via.placeholder.com/80', preco: 19.99, quantidade: 2 },
   ]);
 
   // Simulação de produtos recomendados
   const produtosRecomendados = [
-    { id: '3', nome: 'Produto C', imagem: 'https://via.placeholder.com/100', preco: 14.99 },
-    { id: '4', nome: 'Produto D', imagem: 'https://via.placeholder.com/100', preco: 24.99 },
-    { id: '5', nome: 'Produto E', imagem: 'https://via.placeholder.com/100', preco: 9.99 },
+    { id: '3', nome: 'Produto C', imagem: 'https://via.placeholder.com/80', preco: 14.99 },
+    { id: '4', nome: 'Produto D', imagem: 'https://via.placeholder.com/80', preco: 24.99 },
+    { id: '5', nome: 'Produto E', imagem: 'https://via.placeholder.com/80', preco: 9.99 },
   ];
 
   const adicionarQuantidade = (id) => {
@@ -30,8 +30,7 @@ export default function VerCarrinho() {
     setProdutos((produtos) =>
       produtos.map((produto) =>
         produto.id === id && produto.quantidade > 1
-          ? { ...produto, quantidade: produto.quantidade - 1 }
-          : produto
+          ? { ...produto, quantidade: produto.quantidade - 1 } : produto
       )
     );
   };
@@ -40,37 +39,45 @@ export default function VerCarrinho() {
     setProdutos((produtos) => produtos.filter((produto) => produto.id !== id));
   };
 
+  const handleProdutoPress = (produto) => {
+    navigation.navigate('DetalhesProduto', { produtoId: produto.id }); // produto
+  };
+
   const renderizarProduto = ({ item }) => (
-    <View style={styles.produto}>
-      <Image source={{ uri: item.imagem }} style={styles.imagem_produto} />
-      <View style={styles.detalhes_produto}>
-        <Text style={styles.nome_produto}>{item.nome}</Text>
-        <Text style={styles.preco_produto}>R$ {item.preco.toFixed(2)}</Text>
-      </View>
-      <View style={styles.controle_quantidade}>
-        {item.quantidade > 1 ? (
-          <TouchableOpacity onPress={() => diminuirQuantidade(item.id)}>
-            <Text style={styles.botao_quantidade}>-</Text>
+    <TouchableOpacity onPress={() => handleProdutoPress(item)}>
+      <View style={styles.produto}>
+        <Image source={{ uri: item.imagem }} style={styles.imagem_produto} />
+        <View style={styles.detalhes_produto}>
+          <Text style={styles.nome_produto}>{item.nome}</Text>
+          <Text style={styles.preco_produto}>R$ {item.preco.toFixed(2)}</Text>
+        </View>
+        <View style={styles.controle_quantidade}>
+          {item.quantidade > 1 ? (
+            <TouchableOpacity onPress={() => diminuirQuantidade(item.id)}>
+              <Text style={styles.botao_quantidade}>-</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => removerProduto(item.id)}>
+              <Text style={styles.botao_lixeira}>🗑️</Text>
+            </TouchableOpacity>
+          )}
+          <Text style={styles.quantidade}>{item.quantidade}</Text>
+          <TouchableOpacity onPress={() => adicionarQuantidade(item.id)}>
+            <Text style={styles.botao_quantidade}>+</Text>
           </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={() => removerProduto(item.id)}>
-            <Text style={styles.botao_lixeira}>🗑️</Text>
-          </TouchableOpacity>
-        )}
-        <Text style={styles.quantidade}>{item.quantidade}</Text>
-        <TouchableOpacity onPress={() => adicionarQuantidade(item.id)}>
-          <Text style={styles.botao_quantidade}>+</Text>
-        </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   const renderizarProdutoRecomendado = ({ item }) => (
-    <View style={styles.produto_recomendado}>
-      <Image source={{ uri: item.imagem }} style={styles.imagem_recomendada} />
-      <Text style={styles.nome_produto}>{item.nome}</Text>
-      <Text style={styles.preco_produto}>R$ {item.preco.toFixed(2)}</Text>
-    </View>
+    <TouchableOpacity onPress={() => handleProdutoPress(item)}>
+      <View style={styles.produto_recomendado}>
+        <Image source={{ uri: item.imagem }} style={styles.imagem_recomendada} />
+        <Text style={styles.nome_produto}>{item.nome}</Text>
+        <Text style={styles.preco_produto}>R$ {item.preco.toFixed(2)}</Text>
+      </View>
+    </TouchableOpacity>
   );
 
   const calcularSubtotal = () => {
@@ -91,14 +98,11 @@ export default function VerCarrinho() {
         <Text style={styles.texto_botao_adicionar}>Adicionar mais itens</Text>
       </TouchableOpacity>
 
-      {
-      produtos.map((produto) => (
-          <View key={produto.id} style={styles.lista_produtos}>
-            {renderizarProduto({ item: produto })}
-          </View>
-        ))
-      }
-
+      {produtos.map((produto) => (
+        <View key={produto.id} style={styles.lista_produtos}>
+          {renderizarProduto({ item: produto })}
+        </View>
+      ))}
 
       <Text style={styles.titulo_secao}>Peça Também</Text>
       <FlatList
@@ -235,4 +239,3 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
-
