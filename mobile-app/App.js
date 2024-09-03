@@ -23,6 +23,7 @@ import VerProdutosLoja from './src/screens/ver_produtos_loja.js';
 import VerDetalhesProduto from './src/screens/ver_detalhes_produto.js';
 import { registerForPushNotificationsAsync } from './src/notificacoes.js';
 import VerCarrinho from './src/screens/ver_carrinho.js';
+import VerCheckout from './src/screens/ver_checkout.js';
 
 // import firebase from '@react-native-firebase/app';
 // import '@react-native-firebase/auth';
@@ -57,7 +58,7 @@ function HomeTabs() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Início') {
+          if (route.name === 'Inicio') {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Buscar') {
             iconName = focused ? 'search' : 'search-outline';
@@ -74,7 +75,7 @@ function HomeTabs() {
       })}
     >
       <Tab.Screen 
-        name="Início" 
+        name="Inicio" 
         component={VerLojas} 
       />
       <Tab.Screen 
@@ -254,6 +255,14 @@ export default function App() {
           component={VerCarrinho} 
           options={{
             title: 'Carrinho', 
+            headerBackTitle: 'Voltar',
+          }}
+        />
+        <Stack.Screen 
+          name="Checkout" 
+          component={VerCheckout} 
+          options={{
+            title: 'Checkout', 
             headerBackTitle: 'Voltar',
           }}
         />

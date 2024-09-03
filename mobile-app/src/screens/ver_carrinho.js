@@ -84,16 +84,20 @@ export default function VerCarrinho() {
     return produtos.reduce((total, produto) => total + produto.preco * produto.quantidade, 0);
   };
 
-  const taxaEntrega = 5.99;
+  const TAXA_ENTREGA = 5.99;
   const subtotal = calcularSubtotal();
-  const total = subtotal + taxaEntrega;
+  const total = subtotal + TAXA_ENTREGA;
+
+  const finalizarCompra = () => {
+    navigation.navigate('Checkout');
+  };
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.nome_loja}>Nome da Loja</Text>
       <TouchableOpacity
         style={styles.botao_adicionar}
-        onPress={() => navigation.navigate('Início')}
+        onPress={() => navigation.navigate('Inicio')}
       >
         <Text style={styles.texto_botao_adicionar}>Adicionar mais itens</Text>
       </TouchableOpacity>
@@ -121,13 +125,20 @@ export default function VerCarrinho() {
         </View>
         <View style={styles.linha_resumo}>
           <Text style={styles.texto_resumo}>Taxa de Entrega</Text>
-          <Text style={styles.texto_resumo}>R$ {taxaEntrega.toFixed(2)}</Text>
+          <Text style={styles.texto_resumo}>R$ {TAXA_ENTREGA.toFixed(2)}</Text>
         </View>
         <View style={styles.linha_resumo}>
           <Text style={[styles.texto_resumo, styles.texto_total]}>Total</Text>
           <Text style={[styles.texto_resumo, styles.texto_total]}>R$ {total.toFixed(2)}</Text>
         </View>
       </View>
+
+      <TouchableOpacity
+        style={styles.botao_finalizar}
+        onPress={finalizarCompra}
+      >
+        <Text style={styles.texto_botao_finalizar}>Finalizar Compra</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -160,7 +171,6 @@ const styles = StyleSheet.create({
   produto: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
     backgroundColor: '#f8f8f8',
     padding: 10,
     borderRadius: 8,
@@ -221,7 +231,6 @@ const styles = StyleSheet.create({
   },
   // Estilos para o resumo de valores
   resumo_valores: {
-    marginTop: 20,
     paddingVertical: 15,
     borderTopWidth: 1,
     borderColor: '#ccc',
@@ -236,6 +245,16 @@ const styles = StyleSheet.create({
   },
   texto_total: {
     fontWeight: 'bold',
+    fontSize: 18,
+  },
+  botao_finalizar: {
+    backgroundColor: '#3ad3f3',
+    paddingVertical: 15,
+    borderRadius: 5,
+  },
+  texto_botao_finalizar: {
+    color: '#fff',
+    textAlign: 'center',
     fontSize: 18,
   },
 });
