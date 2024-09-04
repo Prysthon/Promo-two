@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function VerCategoria() {
   const [searchQuery, setSearchQuery] = useState('');
+  const navigation = useNavigation();
 
   const categories = [
     { id: '1', name: 'Elétricos', icon: 'bulb-outline' },
@@ -19,19 +21,23 @@ export default function VerCategoria() {
     { id: '11', name: 'Beleza', icon: 'color-palette-outline' },
   ];
 
+  const handleCategoryPress = (categoryName) => {
+    navigation.navigate('VerProdutosCategoria', { categoryName });
+  };
+
   const renderCategories = () => {
     const rows = [];
     for (let i = 0; i < categories.length; i += 2) {
       rows.push(
         <View key={i} style={styles.categoryRow}>
-          <TouchableOpacity style={styles.categoryItem}>
+          <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(categories[i].name)}>
             <View style={styles.categoryIconContainer}>
               <Icon name={categories[i].icon} size={50} color="#fff" />
               <Text style={styles.categoryName}>{categories[i].name}</Text>
             </View>
           </TouchableOpacity>
           {categories[i + 1] && (
-            <TouchableOpacity style={styles.categoryItem}>
+            <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(categories[i + 1].name)}>
               <View style={styles.categoryIconContainer}>
                 <Icon name={categories[i + 1].icon} size={50} color="#fff" />
                 <Text style={styles.categoryName}>{categories[i + 1].name}</Text>

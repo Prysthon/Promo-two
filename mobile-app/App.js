@@ -24,6 +24,7 @@ import { registerForPushNotificationsAsync } from './src/notificacoes.js';
 import VerCarrinho from './src/screens/ver_carrinho.js';
 import VerCheckout from './src/screens/ver_checkout.js';
 import VerCategoria from './src/screens/ver_categorias.js';
+import VerProdutosCategoria from './src/screens/ver_produtos_categoria.js';
 
 // import firebase from '@react-native-firebase/app';
 // import '@react-native-firebase/auth';
@@ -91,6 +92,7 @@ function HomeTabs() {
         component={Profile} 
       />
     </Tab.Navigator>
+    
   );
 }
 
@@ -263,6 +265,14 @@ export default function App() {
           component={VerCheckout} 
           options={{
             title: 'Checkout', 
+            headerBackTitle: 'Voltar',
+          }}
+        />
+        <Stack.Screen 
+          name="VerProdutosCategoria" 
+          component={VerProdutosCategoria} 
+          options={{
+            title: 'Produtos', 
             headerBackTitle: 'Voltar',
           }}
         />
