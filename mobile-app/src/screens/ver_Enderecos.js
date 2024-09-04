@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const addresses = [
+const Enderecos = [
   {
     id: '1',
     label: 'Casa',
@@ -26,7 +26,7 @@ const addresses = [
   // Adicione mais endereços conforme necessário
 ];
 
-export default function Addresses() {
+export default function VerEnderecos() {
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <View style={styles.itemDetails}>
@@ -49,7 +49,7 @@ export default function Addresses() {
     <View style={styles.container}>
       <Text style={styles.header}>Endereços</Text>
       <FlatList
-        data={addresses}
+        data={Enderecos}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.list}

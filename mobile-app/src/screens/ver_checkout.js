@@ -42,7 +42,10 @@ export default function VerCheckout() {
           <Text style={styles.texto_item}>{endereco.rua}</Text>
           <Text style={styles.texto_subitem}>{`${endereco.bairro}, ${endereco.complemento}`}</Text>
         </View>
-        <TouchableOpacity style={styles.botao_trocar}>
+        <TouchableOpacity 
+          style={styles.botao_trocar} 
+          onPress={() => navigation.navigate('Enderecos')}
+        >
           <Text style={styles.texto_botao_trocar}>Trocar</Text>
         </TouchableOpacity>
       </View>

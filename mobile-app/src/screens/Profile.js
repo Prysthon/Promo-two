@@ -39,7 +39,7 @@ export default function Profile({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.option}
-          onPress={() => navigation.navigate('Addresses')}
+          onPress={() => navigation.navigate('Enderecos')}
         >
           <Text style={styles.optionText}>Endereços</Text>
         </TouchableOpacity>
