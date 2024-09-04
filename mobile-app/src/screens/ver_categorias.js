@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function CategorySearch() {
+export default function VerCategoria() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [

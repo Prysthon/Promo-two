@@ -13,7 +13,6 @@ import Register from './src/screens/Register.js';
 import Profile from './src/screens/Profile.js';
 import VerLojas from './src/screens/ver_lojas.js';
 import LastOrders from './src/screens/LastOrders.js';
-import StoresSearch from './src/screens/StoresSearch.js';
 import EditProfile from './src/screens/EditProfile.js';
 import Settings from './src/screens/Settings.js';
 import PurchaseHistory from './src/screens/PurchaseHistory.js';
@@ -24,6 +23,7 @@ import VerDetalhesProduto from './src/screens/ver_detalhes_produto.js';
 import { registerForPushNotificationsAsync } from './src/notificacoes.js';
 import VerCarrinho from './src/screens/ver_carrinho.js';
 import VerCheckout from './src/screens/ver_checkout.js';
+import VerCategoria from './src/screens/ver_categorias.js';
 
 // import firebase from '@react-native-firebase/app';
 // import '@react-native-firebase/auth';
@@ -80,7 +80,7 @@ function HomeTabs() {
       />
       <Tab.Screen 
         name="Buscar" 
-        component={StoresSearch} 
+        component={VerCategoria} 
       />
       <Tab.Screen 
         name="Pedidos" 
