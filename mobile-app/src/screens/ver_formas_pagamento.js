@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const paymentMethods = [
+const FormasPagamento = [
   {
     id: '1',
     cardNumber: '**** **** **** 1234',
@@ -20,7 +20,7 @@ const paymentMethods = [
   // Adicione mais métodos de pagamento conforme necessário
 ];
 
-export default function PaymentMethods() {
+export default function VerFormasPagamento() {
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <View style={styles.itemDetails}>
@@ -42,7 +42,7 @@ export default function PaymentMethods() {
     <View style={styles.container}>
       <Text style={styles.header}>Métodos de Pagamento</Text>
       <FlatList
-        data={paymentMethods}
+        data={FormasPagamento}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.list}

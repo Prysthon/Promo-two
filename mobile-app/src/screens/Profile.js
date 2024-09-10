@@ -33,7 +33,7 @@ export default function Profile({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.option}
-          onPress={() => navigation.navigate('PaymentMethods')}
+          onPress={() => navigation.navigate('VerFormasPagamento')}
         >
           <Text style={styles.optionText}>Pagamentos</Text>
         </TouchableOpacity>

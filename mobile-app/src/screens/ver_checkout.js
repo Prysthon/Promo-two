@@ -59,7 +59,10 @@ export default function VerCheckout() {
           <Text style={styles.texto_item}>{cartao.nome}</Text>
           <Text style={styles.texto_subitem}>{`${cartao.bandeira}, **** ${cartao.ultimos_digitos}`}</Text>
         </View>
-        <TouchableOpacity style={styles.botao_trocar}>
+        <TouchableOpacity 
+          style={styles.botao_trocar}
+          onPress={() => navigation.navigate('VerFormasPagamento')}
+        >
           <Text style={styles.texto_botao_trocar}>Trocar</Text>
         </TouchableOpacity>
       </View>

@@ -16,7 +16,6 @@ import LastOrders from './src/screens/LastOrders.js';
 import EditProfile from './src/screens/EditProfile.js';
 import Settings from './src/screens/Settings.js';
 import PurchaseHistory from './src/screens/PurchaseHistory.js';
-import PaymentMethods from './src/screens/PaymentMethods.js';
 import VerProdutosLoja from './src/screens/ver_produtos_loja.js';
 import VerDetalhesProduto from './src/screens/ver_detalhes_produto.js';
 import { registerForPushNotificationsAsync } from './src/notificacoes.js';
@@ -25,6 +24,7 @@ import VerCheckout from './src/screens/ver_checkout.js';
 import VerCategoria from './src/screens/ver_categorias.js';
 import VerProdutosCategoria from './src/screens/ver_produtos_categoria.js';
 import VerEnderecos from './src/screens/ver_Enderecos.js';
+import VerFormasPagamento from './src/screens/ver_formas_pagamento.js';
 
 // import firebase from '@react-native-firebase/app';
 // import '@react-native-firebase/auth';
@@ -221,8 +221,8 @@ export default function App() {
           }}
         />
         <Stack.Screen 
-          name="PaymentMethods" 
-          component={PaymentMethods} 
+          name="VerFormasPagamento" 
+          component={VerFormasPagamento} 
           options={{
             title: 'Formas de Pagamento', 
             headerBackTitle: 'Voltar',
