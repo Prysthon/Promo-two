@@ -19,10 +19,14 @@ export default function VerLojas() {
   ];
 
   const renderizarLojasDestacadas = ({ item }) => (
-    <View style={styles.item_horizontal}>
-      <Image source={{ uri: item.imagem }} style={styles.imagem_restaurante} />
-      <Text style={styles.nome_restaurante}>{item.nome}</Text>
-    </View>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Produtos', { lojaId: item.id })}
+    >
+      <View style={styles.item_horizontal}>
+        <Image source={{ uri: item.imagem }} style={styles.imagem_restaurante} />
+        <Text style={styles.nome_restaurante}>{item.nome}</Text>
+      </View>
+    </TouchableOpacity>
   );
 
   const renderizarLojas = ({ item }) => {
