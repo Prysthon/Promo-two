@@ -40,7 +40,7 @@ export default function VerCarrinho() {
   };
 
   const handleProdutoPress = (produto) => {
-    navigation.navigate('DetalhesProduto', { produtoId: produto.id }); // produto
+    navigation.navigate('DetalhesProduto', { produto: produto }); // produto
   };
 
   const renderizarProduto = ({ item }) => (
