@@ -75,7 +75,10 @@ export default function VerCheckout() {
         <View style={styles.detalhes_item}>
           <Text style={styles.texto_item}>{cpf}</Text>
         </View>
-        <TouchableOpacity style={styles.botao_trocar}>
+        <TouchableOpacity 
+          style={styles.botao_trocar}
+          onPress={() => navigation.navigate('EditarPerfil')}
+        >
           <Text style={styles.texto_botao_trocar}>Trocar</Text>
         </TouchableOpacity>
       </View>

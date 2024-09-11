@@ -15,7 +15,7 @@ export default function Profile({ navigation }) {
       <View style={styles.optionsContainer}>
         <TouchableOpacity 
           style={styles.option}
-          onPress={() => navigation.navigate('EditProfile')}
+          onPress={() => navigation.navigate('EditarPerfil')}
         >
           <Text style={styles.optionText}>Editar Perfil</Text>
         </TouchableOpacity>

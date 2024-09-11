@@ -13,7 +13,7 @@ import Register from './src/screens/Register.js';
 import Profile from './src/screens/Profile.js';
 import VerLojas from './src/screens/ver_lojas.js';
 import LastOrders from './src/screens/LastOrders.js';
-import EditProfile from './src/screens/EditProfile.js';
+import VerPerfil from './src/screens/ver_perfil.js';
 import Settings from './src/screens/Settings.js';
 import PurchaseHistory from './src/screens/PurchaseHistory.js';
 import VerProdutosLoja from './src/screens/ver_produtos_loja.js';
@@ -197,8 +197,8 @@ export default function App() {
           options={{ headerShown: false }} 
         />
         <Stack.Screen 
-          name="EditProfile" 
-          component={EditProfile} 
+          name="EditarPerfil" 
+          component={VerPerfil} 
           options={{
             title: 'Editar Perfil', 
             headerBackTitle: 'Voltar',

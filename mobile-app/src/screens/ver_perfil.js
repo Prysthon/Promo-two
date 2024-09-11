@@ -1,56 +1,56 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-export default function EditProfile({ navigation }) {
-  const [name, setName] = useState('John Doe');
-  const [email, setEmail] = useState('john.doe@example.com');
-  const [cpf, setCpf] = useState('123.456.789-00');
-  const [password, setPassword] = useState('');
-  const [profileImage] = useState('https://via.placeholder.com/150');
+export default function VerPerfil({ navigation }) {
+  const [nome_usuario, setNomeUsuario] = useState('John Doe');
+  const [email_usuario, setEmailUsuario] = useState('john.doe@example.com');
+  const [cpf_usuario, setCpfUsuario] = useState('123.456.789-00');
+  const [senha_usuario, setSenhaUsuario] = useState('');
+  const [imagem_perfil] = useState('https://via.placeholder.com/150');
 
-  const handleSave = () => {
+  const saveUsuarioPerfil = () => {
     navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
       <Image 
-        source={{ uri: profileImage }} 
-        style={styles.profileImage} 
+        source={{ uri: imagem_perfil }} 
+        style={styles.imagemPerfil} 
       />
 
-      <Text style={styles.label}>Nome</Text>
+      <Text style={styles.rotulo}>Nome</Text>
       <TextInput 
         style={styles.input}
-        value={name}
-        onChangeText={setName}
+        value={nome_usuario}
+        onChangeText={setNomeUsuario}
       />
 
-      <Text style={styles.label}>Email</Text>
+      <Text style={styles.rotulo}>Email</Text>
       <TextInput 
         style={styles.input}
-        value={email}
-        onChangeText={setEmail}
+        value={email_usuario}
+        onChangeText={setEmailUsuario}
       />
 
-      <Text style={styles.label}>CPF</Text>
+      <Text style={styles.rotulo}>CPF</Text>
       <TextInput 
         style={styles.input}
-        value={cpf}
-        onChangeText={setCpf}
+        value={cpf_usuario}
+        onChangeText={setCpfUsuario}
         keyboardType="numeric"
       />
 
-      <Text style={styles.label}>Senha</Text>
+      <Text style={styles.rotulo}>Senha</Text>
       <TextInput 
         style={styles.input}
-        value={password}
-        onChangeText={setPassword}
+        value={senha_usuario}
+        onChangeText={setSenhaUsuario}
         secureTextEntry={true}
       />
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>Salvar</Text>
+      <TouchableOpacity style={styles.botaoSalvar} onPress={saveUsuarioPerfil}>
+        <Text style={styles.textoBotaoSalvar}>Salvar</Text>
       </TouchableOpacity>
     </View>
   );
@@ -62,14 +62,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     padding: 20,
   },
-  profileImage: {
+  imagemPerfil: {
     width: 150,
     height: 150,
     borderRadius: 75,
     alignSelf: 'center',
     marginBottom: 20,
   },
-  label: {
+  rotulo: {
     fontSize: 18,
     color: '#333333',
     marginBottom: 8,
@@ -82,13 +82,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 10,
   },
-  saveButton: {
+  botaoSalvar: {
     backgroundColor: '#3ad3f3',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
   },
-  saveButtonText: {
+  textoBotaoSalvar: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
