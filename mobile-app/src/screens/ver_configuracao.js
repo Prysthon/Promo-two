@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-export default function Settings() {
-  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+export default function VerConfiguracao() {
+  const [notificacoes_ativadas, setNotificacoesAtivadas] = useState(true);
+  const [tema_escuro, setTemaEscuro] = useState(false);
 
-  const toggleNotifications = () => setIsNotificationsEnabled(previousState => !previousState);
-  const toggleTheme = () => setIsDarkTheme(previousState => !previousState);
+  const updNotificacoes = () => setNotificacoesAtivadas((estado_anterior) => !estado_anterior);
+  const updTema = () => setTemaEscuro((estado_anterior) => !estado_anterior);
 
   return (
     <View style={styles.container}>
@@ -16,10 +16,10 @@ export default function Settings() {
         <Text style={styles.settingText}>Notificações</Text>
         <Switch
           trackColor={{ false: "#767577", true: "#3ad3f3" }}
-          thumbColor={isNotificationsEnabled ? "#ffffff" : "#f4f3f4"}
+          thumbColor={notificacoes_ativadas ? "#ffffff" : "#f4f3f4"}
           ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleNotifications}
-          value={isNotificationsEnabled}
+          onValueChange={updNotificacoes}
+          value={notificacoes_ativadas}
         />
       </View>
 
@@ -28,10 +28,10 @@ export default function Settings() {
         <Text style={styles.settingText}>Tema Escuro</Text>
         <Switch
           trackColor={{ false: "#767577", true: "#3ad3f3" }}
-          thumbColor={isDarkTheme ? "#ffffff" : "#f4f3f4"}
+          thumbColor={tema_escuro ? "#ffffff" : "#f4f3f4"}
           ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleTheme}
-          value={isDarkTheme}
+          onValueChange={updTema}
+          value={tema_escuro}
         />
       </View>
     </View>
