@@ -25,6 +25,7 @@ import VerEnderecos from './src/screens/ver_Enderecos.js';
 import VerFormasPagamento from './src/screens/ver_formas_pagamento.js';
 import VerConfiguracao from './src/screens/ver_configuracao.js';
 import VerUltimosPedidos from './src/screens/ver_ultimos_pedidos.js';
+import VerAvaliarProduto from './src/screens/ver_avaliar_produto.js'
 
 // import firebase from '@react-native-firebase/app';
 // import '@react-native-firebase/auth';
@@ -273,6 +274,14 @@ export default function App() {
           component={VerProdutosCategoria} 
           options={{
             title: 'Produtos', 
+            headerBackTitle: 'Voltar',
+          }}
+        />
+        <Stack.Screen 
+          name="AvaliarProduto" 
+          component={VerAvaliarProduto} 
+          options={{
+            title: 'Avaliar', 
             headerBackTitle: 'Voltar',
           }}
         />

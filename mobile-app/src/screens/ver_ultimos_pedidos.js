@@ -54,7 +54,10 @@ export default function VerUltimosPedidos() {
         <TouchableOpacity style={styles.botao_ajuda}>
           <Text style={styles.texto_botao}>Ajuda</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.botao_avaliar}>
+        <TouchableOpacity 
+          style={styles.botao_avaliar} 
+          onPress={() => navigation.navigate('AvaliarProduto', { item: item })}
+        >
           <Text style={styles.texto_botao}>Avalie o pedido</Text>
         </TouchableOpacity>
       </View>
@@ -62,7 +65,7 @@ export default function VerUltimosPedidos() {
   );
 
   const redirecionarParaProdutos = () => {
-    navigation.navigate('Produtos', { lojaId: ultimo_pedido.id }); // Aqui é feito o redirecionamento para a página Produtos
+    navigation.navigate('Produtos', { lojaId: ultimo_pedido.id }); 
   };
 
   return (
