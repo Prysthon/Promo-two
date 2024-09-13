@@ -51,7 +51,10 @@ export default function VerUltimosPedidos() {
         <Text style={styles.numero_pedido}>{item.numero_pedido}</Text>
       </View>
       <View style={styles.row_botoes}>
-        <TouchableOpacity style={styles.botao_ajuda}>
+        <TouchableOpacity 
+          style={styles.botao_ajuda}
+          onPress={() => navigation.navigate('Ajuda', { item: item })}
+        >
           <Text style={styles.texto_botao}>Ajuda</Text>
         </TouchableOpacity>
         <TouchableOpacity 
