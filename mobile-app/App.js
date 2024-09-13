@@ -12,7 +12,6 @@ import Login from './src/screens/Login.js';
 import Register from './src/screens/Register.js';
 import Profile from './src/screens/Profile.js';
 import VerLojas from './src/screens/ver_lojas.js';
-import LastOrders from './src/screens/LastOrders.js';
 import VerPerfil from './src/screens/ver_perfil.js';
 import PurchaseHistory from './src/screens/PurchaseHistory.js';
 import VerProdutosLoja from './src/screens/ver_produtos_loja.js';
@@ -25,6 +24,7 @@ import VerProdutosCategoria from './src/screens/ver_produtos_categoria.js';
 import VerEnderecos from './src/screens/ver_Enderecos.js';
 import VerFormasPagamento from './src/screens/ver_formas_pagamento.js';
 import VerConfiguracao from './src/screens/ver_configuracao.js';
+import VerUltimosPedidos from './src/screens/ver_ultimos_pedidos.js';
 
 // import firebase from '@react-native-firebase/app';
 // import '@react-native-firebase/auth';
@@ -85,7 +85,7 @@ function HomeTabs() {
       />
       <Tab.Screen 
         name="Pedidos" 
-        component={LastOrders} 
+        component={VerUltimosPedidos} 
       />
       <Tab.Screen 
         name="Perfil" 
