@@ -1,9 +1,20 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
+import eventlet
+import eventlet.green.socket  # Necessário para compatibilidade com Eventlet
 
+# Aplicação Flask
 app = Flask(__name__)
-socketio = SocketIO(app)
-global sacola
+app.config['SECRET_KEY'] = 'sua_chave_secreta_aqui'  # Substitua por uma chave secreta segura
+
+# Inicialização do SocketIO com Eventlet
+socketio = SocketIO(
+    app,
+    async_mode='eventlet',
+    cors_allowed_origins="*",  # Permite conexões de qualquer origem. Ajuste conforme necessário.
+    logger=True,               # Habilita logs do SocketIO
+    engineio_logger=True
+)
 
 # Dicionário global para a sacola
 sacola = {}  # Chave: sale_id, Valor: lista de itens de venda (SaleItem)
@@ -13,32 +24,32 @@ sacola = {}  # Chave: sale_id, Valor: lista de itens de venda (SaleItem)
 def index():
     return render_template('index.html')
 
-# WebSocket - Eventos de conexão e desconexão
+# Eventos de conexão e desconexão
 @socketio.on('connect')
-def connect():
+def handle_connect():
     print("Cliente conectado")
     emit('status', {'message': 'Conectado ao servidor WebSocket'})
 
 @socketio.on('disconnect')
-def disconnect():
+def handle_disconnect():
     print("Cliente desconectado")
 
-# Função única para obter produtos com base em filtros
+# Evento para obter produtos com base em filtros
 @socketio.on('getProdutos')
-def getProdutos(data):
-    promotion = data.get('promotion', None)  # 'Sim' ou 'Nao'
-    user_id = data.get('user_id', None)
-    category = data.get('category', None)
-    avaliable = data.get('avaliable', None)  # 'Sim' ou 'Nao'
+def handle_getProdutos(data):
+    promotion = data.get('promotion')      # 'Sim' ou 'Nao'
+    user_id = data.get('user_id')
+    category = data.get('category')
+    avaliable = data.get('avaliable')      # 'Sim' ou 'Nao'
     active = data.get('active', True)
 
     produtos = getProdutosDB(promotion, user_id, category, avaliable, active)
     emit('produtos', {'produtos': produtos})
 
-# Funções de manipulação da sacola
+# Eventos para manipulação da sacola
 @socketio.on('updateSacola')
-def updSacola(data):
-    action = data.get('action')  # 'add', 'remove', 'clear'
+def handle_updateSacola(data):
+    action = data.get('action')           # 'add', 'remove', 'clear'
     sale_id = data.get('sale_id')
     product_id = data.get('product_id')
     quantity = data.get('quantity', 1)
@@ -58,24 +69,24 @@ def updSacola(data):
 
     emit('sacolaAtualizada', {'message': message})
 
-# Funções de manipulação de endereço e token
+# Eventos para manipulação de endereço e token
 @socketio.on('updEnderecoCliente')
-def updEnderecoCliente(data):
+def handle_updEnderecoCliente(data):
     user_id = data.get('user_id')
     endereco = data.get('endereco')
     updEnderecoCliente(user_id, endereco)
     emit('enderecoAtualizado', {'message': 'Endereço atualizado com sucesso', 'endereco': endereco})
 
 @socketio.on('saveTokenFirebase')
-def saveTokenFirebase(data):
+def handle_saveTokenFirebase(data):
     user_id = data.get('user_id')
     token = data.get('token')
     saveTokenFirebaseCliente(user_id, token)
     emit('tokenSalvo', {'message': 'Token Firebase salvo com sucesso', 'token': token})
 
-# Função saveChamado
+# Evento para salvar chamados
 @socketio.on('saveChamado')
-def saveChamado(data):
+def handle_saveChamado(data):
     chamado_id = data.get('chamado_id')
     user_id = data.get('user_id')
     assunto = data.get('assunto')
@@ -164,12 +175,12 @@ def delSacola(sale_id):
 
 def updEnderecoCliente(user_id, endereco):
     # Simula a atualização do endereço do cliente
-    # Aqui você pode simular atualizando um dicionário ou simplesmente passar
+    # Aqui você pode simular atualizando um dicionário ou integrar com um banco de dados real
     pass
 
 def saveTokenFirebaseCliente(user_id, token):
     # Simula o salvamento do token Firebase do cliente
-    # Aqui você pode simular atualizando um dicionário ou simplesmente passar
+    # Aqui você pode simular atualizando um dicionário ou integrar com um banco de dados real
     pass
 
 def saveChamadoCliente(chamado_id, user_id, assunto, descricao, user_type, status):
@@ -180,5 +191,7 @@ def saveChamadoCliente(chamado_id, user_id, assunto, descricao, user_type, statu
         novo_chamado_id = 123  # ID simulado para o novo chamado
         return f'Novo chamado criado com ID {novo_chamado_id}'
 
+# Execução do Servidor
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    # Executa o servidor SocketIO com Eventlet
+    socketio.run(app, host='0.0.0.0', port=5000, debug=False)
