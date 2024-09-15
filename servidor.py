@@ -195,3 +195,208 @@ def saveChamadoCliente(chamado_id, user_id, assunto, descricao, user_type, statu
 if __name__ == '__main__':
     # Executa o servidor SocketIO com Eventlet
     socketio.run(app, host='127.0.0.1', port=5001, debug=False)
+
+
+
+
+# Usar os mesmos nomes das tabelas do banco de dados abaixo.
+
+# from django.contrib.auth.models import AbstractUser
+# from django.db import models
+
+# # from django.db.models import JSONField
+# # from django_jsonfield_backport.models import JSONField
+
+# USER_TYPE_CHOICES = (
+#     ('store_owner', 'Lojista'),
+#     ('deliveryman', 'Entregador'),
+#     ('customer', 'Cliente')
+# )
+
+
+# class CustomUser(AbstractUser):
+#     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
+#     isAdmin = models.BooleanField(default=False)
+#     active = models.BooleanField(default=True)
+#     avaliable = models.BooleanField(default=False)
+#     banned = models.BooleanField(default=False)
+#     token = models.CharField(max_length=255, blank=True, null=True)
+
+
+# # print({'user':request.user,
+# #                 'category':categoria,
+# #                 'image':None,
+# #                 'name':nomeProduto,
+# #                 'description':descricao,
+# #                 'price':preco_total,
+# #                 'quantity':quantidade,
+# #                 'avaliable':disponivel,
+# #                 'promotion':promocao,
+# #                 'commission' : comissao,
+# #                 'earnigs' : preco})
+# class Product(models.Model):
+#     AVALIABLE_CHOICES = (
+#         ('Sim', 'Sim'),
+#         ('Nao', 'Nao'),
+#     )
+#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     category = models.CharField(max_length=100, default='Outros')
+#     image = models.ImageField(upload_to='products/', default=None)
+#     name = models.CharField(max_length=100)
+#     description = models.TextField()
+#     price = models.DecimalField(max_digits=10, decimal_places=2)
+#     quantity = models.PositiveIntegerField()
+#     avaliable = models.CharField(max_length=3, choices=AVALIABLE_CHOICES, default='nao')
+#     promotion = models.CharField(max_length=3)
+#     commission = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+#     earnigs = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+#     active = models.BooleanField(default=True)
+#     # Adicione mais campos conforme necessário
+
+
+# class CashFlow(models.Model):
+#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     entry = models.DecimalField(max_digits=10, decimal_places=2)
+#     exit = models.DecimalField(max_digits=10, decimal_places=2)
+#     balance = models.DecimalField(max_digits=10, decimal_places=2)
+#     timestamp = models.DateTimeField(auto_now_add=True)
+
+#     # Adicione mais campos conforme necessário
+
+
+# class Call(models.Model):
+#     USER_TYPE_CHOICES = (
+#         ('store_owner', 'Lojista'),
+#         ('deliveryman', 'Entregador'),
+#         ('customer', 'Cliente'),
+#     )
+
+#     STATUS_CHOICES = (
+#         ('em_andamento', 'Em Andamento'),
+#         ('concluido', 'Concluído'),
+#         ('aberto', 'Aberto'),
+#     )
+
+#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     assunto = models.CharField(max_length=200)
+#     descricao = models.TextField()
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='customer')
+#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='aberto')
+
+#     def __str__(self):
+#         return f"Chamado de {self.user.username} - {self.assunto}"
+
+
+# class UserProfile(models.Model):
+#     USER_TYPE_CHOICES = (
+#         ('store_owner', 'Lojista'),
+#         ('deliveryman', 'Entregador'),
+#         ('customer', 'Cliente'),
+#     )
+#     user = models.OneToOneField('core.CustomUser', on_delete=models.CASCADE)
+#     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='customer')
+
+#     # Adicione mais campos de perfil do usuário, se necessário
+
+#     def __str__(self):
+#         return self.user.username
+
+
+# class UserFeatures(models.Model):
+#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     nome = models.CharField(max_length=100)
+#     cpf = models.CharField(max_length=14)
+#     street = models.CharField(max_length=200, null=True, blank=True)
+#     bairro = models.CharField(max_length=50, null=True, blank=True)
+#     numero = models.CharField(max_length=10, null=True, blank=True)
+#     complemento = models.CharField(max_length=200, null=True, blank=True)
+#     referencia = models.CharField(max_length=200, null=True, blank=True)
+#     telefone = models.CharField(max_length=20, null=True, blank=True)
+#     zip_code = models.CharField(max_length=10, null=True, blank=True)
+#     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+#     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+#     estado = models.CharField(max_length=50)
+#     cidade = models.CharField(max_length=50)
+#     estado_civil = models.CharField(max_length=20)
+#     quantidade_filhos = models.PositiveIntegerField()
+
+#     def __str__(self):
+#         return self.nome
+
+
+# class Sale(models.Model):
+#     CHOICES_PAYMENT = (
+#         ('pendente', 'Pendente'),
+#         ('pedido aceito', 'Pedido Aceito'),
+#         ('pedido recusado', 'Pedido Recusado'),
+#         ('entrega aceita', 'Entrega Aceita'),
+#         ('entrega recusada', 'Entrega Recusada'),
+#         ('entrega realizada', 'Entrega Realizada'),
+#         ('pago', 'Pago'),
+#     )
+#     CHOICES_ORDER = (
+#         ('aceito', 'Aceito'),
+#         ('recusado', 'Recusado'),
+#         ('pendente', 'Pendente'),
+#     )
+#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     seller = models.ForeignKey(CustomUser, related_name='sales', on_delete=models.CASCADE, null=True, blank=True)
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     status = models.CharField(max_length=20, choices=CHOICES_PAYMENT, default='pendente')
+#     status_order = models.CharField(max_length=20, choices=CHOICES_ORDER, default='pendente')
+#     response = models.CharField(max_length=25, null=True, blank=True)
+#     id_deliveryman = models.PositiveIntegerField(default=0)
+#     paid = models.DateTimeField(null=True, blank=True)
+#     store_accepted = models.DateTimeField(null=True, blank=True)
+#     deliveryman = models.CharField(max_length=10, null=True, blank=True)
+#     deliveryman_accepted = models.DateTimeField(null=True, blank=True)
+#     deliveryman_left_store = models.DateTimeField(null=True, blank=True)
+#     deliveryman_completed = models.DateTimeField(null=True, blank=True)
+#     customer_canceled = models.DateTimeField(null=True, blank=True)
+#     store_canceled = models.DateTimeField(null=True, blank=True)
+#     deliveryman_canceled = models.DateTimeField(null=True, blank=True)
+#     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+#     latitude_store = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+#     longitude_store = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+#     latitude_customer = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+#     longitude_customer = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+#     route_distance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+#     freight_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+#     def __str__(self):
+#         return f"Id: {self.id}\n\
+#                 Status da compra: {self.status}\n\
+#                 Total: {self.total_price}\n\
+#                 ID do entregador: {self.id_deliveryman}\n\
+#                 Usuário: {self.user.username}\n\
+#                 "
+
+#     @property
+#     def get_items(self):
+#         return self.sale_items.all()
+
+
+# class SaleItem(models.Model):
+#     sale = models.ForeignKey(Sale, on_delete=models.CASCADE, related_name='sale_items')
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+#     quantity = models.PositiveIntegerField()
+#     price = models.DecimalField(max_digits=10, decimal_places=2)
+
+#     def __str__(self):
+#         return f"{self.quantity}x {self.product.name} - {self.sale.id}"
+
+
+# class BackupFile(models.Model):
+#     file = models.FileField(upload_to='backups/')
+#     uploaded_at = models.DateTimeField(auto_now_add=True)
+# # class Deliveryman(models.Model):
+# #     id__venda = models.ForeignKey(Sale, on_delete=models.CASCADE)
+# #     id_entregador = models.PositiveIntegerField()
+# #     latitude_store = models.DecimalField(max_digits=9, decimal_places=6)
+# #     longitude_store= models.DecimalField(max_digits=9, decimal_places=6)
+# #     latitude_customer = models.DecimalField(max_digits=9, decimal_places=6)
+# #     longitude_customer = models.DecimalField(max_digits=9, decimal_places=6)
+# #     dist_loja_cliente = models.DecimalField(max_digits=10, decimal_places=2)
+# #     dist_km = models.DecimalField(max_digits=10, decimal_places=2)
+# #     freight_value = models.DecimalField(max_digits=10, decimal_places=2)
