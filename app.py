@@ -194,4 +194,4 @@ def saveChamadoCliente(chamado_id, user_id, assunto, descricao, user_type, statu
 # Execução do Servidor
 if __name__ == '__main__':
     # Executa o servidor SocketIO com Eventlet
-    socketio.run(app, host='0.0.0.0', port=5000, debug=False)
+    socketio.run(app, host='127.0.0.1', port=5001, debug=False)
