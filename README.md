@@ -14,8 +14,12 @@ Aplicativo de ecommerce de produtos à pronta entrega
 
 ## Abrir o projeto
     Abra o simulador android
+    cd mobile-app
 
-    cd mobile-app & yarn install
+    #apenas a primeira vez:
+        eas build --profile development --platform android
+        yarn install
+
     yarn start
     pressione "a" para abrir o aplicativo na tela inicial
 
