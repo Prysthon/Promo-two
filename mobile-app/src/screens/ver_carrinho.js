@@ -1,46 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { 
+  getProdutosSacola, 
+  addProdutoSacola, 
+  removeProdutoSacola, 
+  subscribeToSacolaAtualizada, 
+  clearSacola 
+} from '../services/servico_sacola'; 
 
 export default function VerCarrinho() {
   const navigation = useNavigation();
 
-  // Simulação de produtos adicionados ao carrinho
-  const [produtos, setProdutos] = useState([
-    { id: '1', nome: 'Produto A', imagem: 'https://via.placeholder.com/80', preco: 29.99, quantidade: 1 },
-    { id: '2', nome: 'Produto B', imagem: 'https://via.placeholder.com/80', preco: 19.99, quantidade: 2 },
-  ]);
+  const [produtos, setProdutos] = useState([]);
+  const sale_id = 1;  // Exemplo de sale_id
 
-  // Simulação de produtos recomendados
-  const produtosRecomendados = [
-    { id: '3', nome: 'Produto C', imagem: 'https://via.placeholder.com/80', preco: 14.99 },
-    { id: '4', nome: 'Produto D', imagem: 'https://via.placeholder.com/80', preco: 24.99 },
-    { id: '5', nome: 'Produto E', imagem: 'https://via.placeholder.com/80', preco: 9.99 },
-  ];
+  const carregarSacola = async () => {
+    try {
+      const result = await getProdutosSacola(1);  // Pede os produtos da sacola com sale_id = 1
+      console.log('Resposta da sacola:', result);  // Verifica a resposta no console
+  
+      if (result && result.success) {
+        // Caso sucesso, atualiza a lista de produtos no estado
+        setProdutos(result.produtos);
+      } else {
+        console.error('Erro ao carregar sacola: Nenhum produto encontrado.');
+      }
+    } catch (error) {
+      console.error('Erro ao carregar sacola:', error.message);
+    }
+  };
+  
+  useEffect(() => {
+    carregarSacola();  // Carrega a sacola quando o componente é montado
+
+    // Escuta atualizações da sacola via WebSocket
+    subscribeToSacolaAtualizada((data) => {
+      setProdutos(data.produtos);
+    });
+  }, []);
 
   const adicionarQuantidade = (id) => {
-    setProdutos((produtos) =>
-      produtos.map((produto) =>
-        produto.id === id ? { ...produto, quantidade: produto.quantidade + 1 } : produto
-      )
-    );
+    const produto = produtos.find(p => p.product_id === id);
+    addProdutoSacola(sale_id, id, produto.quantity + 1, produto.price);
   };
 
   const diminuirQuantidade = (id) => {
-    setProdutos((produtos) =>
-      produtos.map((produto) =>
-        produto.id === id && produto.quantidade > 1
-          ? { ...produto, quantidade: produto.quantidade - 1 } : produto
-      )
-    );
+    const produto = produtos.find(p => p.product_id === id);
+    if (produto.quantity > 1) {
+      addProdutoSacola(sale_id, id, produto.quantity - 1, produto.price);
+    } else {
+      removeProdutoSacola(sale_id, id);
+    }
   };
 
   const removerProduto = (id) => {
-    setProdutos((produtos) => produtos.filter((produto) => produto.id !== id));
+    removeProdutoSacola(sale_id, id);
   };
 
   const handleProdutoPress = (produto) => {
-    navigation.navigate('DetalhesProduto', { produto: produto }); // produto
+    navigation.navigate('DetalhesProduto', { produto: produto });
   };
 
   const renderizarProduto = ({ item }) => (
@@ -49,20 +68,20 @@ export default function VerCarrinho() {
         <Image source={{ uri: item.imagem }} style={styles.imagem_produto} />
         <View style={styles.detalhes_produto}>
           <Text style={styles.nome_produto}>{item.nome}</Text>
-          <Text style={styles.preco_produto}>R$ {item.preco.toFixed(2)}</Text>
+          <Text style={styles.preco_produto}>R$ {item.price.toFixed(2)}</Text>
         </View>
         <View style={styles.controle_quantidade}>
-          {item.quantidade > 1 ? (
-            <TouchableOpacity onPress={() => diminuirQuantidade(item.id)}>
+          {item.quantity > 1 ? (
+            <TouchableOpacity onPress={() => diminuirQuantidade(item.product_id)}>
               <Text style={styles.botao_quantidade}>-</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={() => removerProduto(item.id)}>
+            <TouchableOpacity onPress={() => removerProduto(item.product_id)}>
               <Text style={styles.botao_lixeira}>🗑️</Text>
             </TouchableOpacity>
           )}
-          <Text style={styles.quantidade}>{item.quantidade}</Text>
-          <TouchableOpacity onPress={() => adicionarQuantidade(item.id)}>
+          <Text style={styles.quantidade}>{item.quantity}</Text>
+          <TouchableOpacity onPress={() => adicionarQuantidade(item.product_id)}>
             <Text style={styles.botao_quantidade}>+</Text>
           </TouchableOpacity>
         </View>
@@ -70,18 +89,8 @@ export default function VerCarrinho() {
     </TouchableOpacity>
   );
 
-  const renderizarProdutoRecomendado = ({ item }) => (
-    <TouchableOpacity onPress={() => handleProdutoPress(item)}>
-      <View style={styles.produto_recomendado}>
-        <Image source={{ uri: item.imagem }} style={styles.imagem_recomendada} />
-        <Text style={styles.nome_produto}>{item.nome}</Text>
-        <Text style={styles.preco_produto}>R$ {item.preco.toFixed(2)}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-
   const calcularSubtotal = () => {
-    return produtos.reduce((total, produto) => total + produto.preco * produto.quantidade, 0);
+    return produtos.reduce((total, produto) => total + produto.price * produto.quantity, 0);
   };
 
   const TAXA_ENTREGA = 5.99;
@@ -103,20 +112,10 @@ export default function VerCarrinho() {
       </TouchableOpacity>
 
       {produtos.map((produto) => (
-        <View key={produto.id} style={styles.lista_produtos}>
+        <View key={produto.product_id} style={styles.lista_produtos}>
           {renderizarProduto({ item: produto })}
         </View>
       ))}
-
-      <Text style={styles.titulo_secao}>Peça Também</Text>
-      <FlatList
-        data={produtosRecomendados}
-        renderItem={renderizarProdutoRecomendado}
-        keyExtractor={(item) => item.id}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.lista_recomendada}
-      />
 
       <View style={styles.resumo_valores}>
         <View style={styles.linha_resumo}>

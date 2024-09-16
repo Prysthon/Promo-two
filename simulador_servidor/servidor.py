@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, jsonify, request
 from flask_socketio import SocketIO, emit
 import eventlet
 import eventlet.green.socket  # Necessário para compatibilidade com Eventlet
@@ -17,7 +17,16 @@ socketio = SocketIO(
 )
 
 # Dicionário global para a sacola
-sacola = {}  # Chave: sale_id, Valor: lista de itens de venda (SaleItem)
+sacola = {
+    1: [  # Simulação de uma sacola com sale_id = 1
+        {'sale_id': 1, 'product_id': 1, 'quantity': 2, 
+         'price': 100.00, 'nome': 'teste1', 'imagem': 'https://via.placeholder.com/100' 
+        },
+        {'sale_id': 1, 'product_id': 2, 'quantity': 1, 
+         'price': 50.00, 'nome': 'teste2', 'imagem': 'https://via.placeholder.com/100'
+        }
+    ]
+}
 
 @app.route('/connect', methods=['POST', 'GET'])
 # def index():
@@ -62,6 +71,14 @@ def handle_getProdutos(data):
     emit('produtos', {'produtos': produtos})
 
 # Eventos para manipulação da sacola
+@socketio.on('getProdutosSacola')
+def handle_getProdutosSacola(data):
+    sale_id = data.get('sale_id')
+    if sale_id in sacola:
+        emit('produtos', {'success': True, 'produtos': sacola[sale_id]})
+    else:
+        emit('produtos', {'success': False, 'produtos': []})
+
 @socketio.on('updateSacola')
 def handle_updateSacola(data):
     action = data.get('action')           # 'add', 'remove', 'clear'
