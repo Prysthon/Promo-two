@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
 import eventlet
 import eventlet.green.socket  # Necessário para compatibilidade com Eventlet
@@ -19,10 +19,25 @@ socketio = SocketIO(
 # Dicionário global para a sacola
 sacola = {}  # Chave: sale_id, Valor: lista de itens de venda (SaleItem)
 
+@app.route('/connect', methods=['POST', 'GET'])
+# def index():
+#     return render_template('index.html')
+
+def connect():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    # Verifica se o usuário e a senha são corretos
+    if username == 't' and password == '123':
+        return jsonify({'message': 'Conectado com sucesso!'}), 200
+    else:
+        return jsonify({'message': 'Usuário ou senha inválidos'}), 401
+
 # Rota para o front-end
-@app.route('/')
-def index():
-    return render_template('index.html')
+# @app.route('/')
+# def index():
+#     return render_template('index.html')
 
 # Eventos de conexão e desconexão
 @socketio.on('connect')

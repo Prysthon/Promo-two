@@ -1,7 +1,21 @@
-import React from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { loginUser } from "../services/servico_login";
 
 export default function Login({ navigation }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleConnect = async () => {
+    const result = await loginUser(username, password);
+
+    if (result.success) {
+      navigation.replace('HomeTabs');
+    } else {
+      Alert.alert('Erro', result.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -20,6 +34,8 @@ export default function Login({ navigation }) {
                 style={styles.input} 
                 placeholder="Usuário"
                 placeholderTextColor="#7f8c8d"
+                value={username}
+                onChangeText={setUsername}
               />
             </View>
             <View style={styles.labelInput}>
@@ -28,11 +44,13 @@ export default function Login({ navigation }) {
                 placeholder="Password"
                 placeholderTextColor="#7f8c8d"
                 secureTextEntry
+                value={password}
+                onChangeText={setPassword}
               />
             </View>
             <TouchableOpacity 
               style={styles.btnSecond} 
-              onPress={() => navigation.replace('HomeTabs')}
+              onPress={handleConnect}
             >
               <Text style={styles.btnText}>Entrar</Text>
             </TouchableOpacity>
