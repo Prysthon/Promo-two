@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 
-export default function VerDetalhesProduto({ route }) {
+export default function VerDetalhesProduto({ route, navigation }) {
   const { produto } = route.params;
 
   const [quantidade, setQuantidade] = useState(1);
 
   // Função para adicionar ao carrinho
   const adicionarAoCarrinho = () => {
-    alert(`${produto.nome} (x${quantidade}) adicionado à sacola.`);
+    Alert.alert(
+      'Adicionado a Sacola', 
+      `${produto.nome} (x${quantidade}) adicionado à sacola.`,
+      [
+        { text: 'OK', onPress: () => navigation.goBack() } // Redireciona para a página anterior ao clicar "OK"
+      ]
+    );
   };
 
   return (
