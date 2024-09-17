@@ -5,8 +5,7 @@ import {
   getProdutosSacola, 
   addProdutoSacola, 
   removeProdutoSacola, 
-  subscribeToSacolaAtualizada, 
-  clearSacola 
+  subscribeToSacolaAtualizada,
 } from '../services/servico_sacola'; 
 
 export default function VerCarrinho() {
@@ -17,10 +16,8 @@ export default function VerCarrinho() {
 
   const carregarSacola = async () => {
     try {
-      const result = await getProdutosSacola(1);  // Pede os produtos da sacola com sale_id = 1
-      console.log('Resposta da sacola:', result);  // Verifica a resposta no console
-  
-      if (result && result.success) {
+      const result = await getProdutosSacola(1);  // Pede os produtos da sacola com sale_id = 1  
+      if (result && result.produtos) {
         // Caso sucesso, atualiza a lista de produtos no estado
         setProdutos(result.produtos);
       } else {
@@ -36,21 +33,27 @@ export default function VerCarrinho() {
 
     // Escuta atualizações da sacola via WebSocket
     subscribeToSacolaAtualizada((data) => {
-      setProdutos(data.produtos);
+      if (data && data.produtos) {
+        setProdutos(data.produtos);
+      }
     });
-  }, []);
+  }, [produtos]);
 
   const adicionarQuantidade = (id) => {
-    const produto = produtos.find(p => p.product_id === id);
-    addProdutoSacola(sale_id, id, produto.quantity + 1, produto.price);
+    const produto = produtos.find(p => p.produto_id === id);
+    if (produto) {
+      addProdutoSacola(sale_id, id, produto.quantity + 1, produto.price);
+    }
   };
 
   const diminuirQuantidade = (id) => {
-    const produto = produtos.find(p => p.product_id === id);
-    if (produto.quantity > 1) {
-      addProdutoSacola(sale_id, id, produto.quantity - 1, produto.price);
-    } else {
-      removeProdutoSacola(sale_id, id);
+    const produto = produtos.find(p => p.produto_id === id);
+    if (produto) {
+      if (produto.quantity > 1) {
+        addProdutoSacola(sale_id, id, produto.quantity - 1, produto.price);
+      } else {
+        removeProdutoSacola(sale_id, id);
+      }
     }
   };
 
@@ -72,16 +75,16 @@ export default function VerCarrinho() {
         </View>
         <View style={styles.controle_quantidade}>
           {item.quantity > 1 ? (
-            <TouchableOpacity onPress={() => diminuirQuantidade(item.product_id)}>
+            <TouchableOpacity onPress={() => diminuirQuantidade(item.produto_id)}>
               <Text style={styles.botao_quantidade}>-</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={() => removerProduto(item.product_id)}>
+            <TouchableOpacity onPress={() => removerProduto(item.produto_id)}>
               <Text style={styles.botao_lixeira}>🗑️</Text>
             </TouchableOpacity>
           )}
           <Text style={styles.quantidade}>{item.quantity}</Text>
-          <TouchableOpacity onPress={() => adicionarQuantidade(item.product_id)}>
+          <TouchableOpacity onPress={() => adicionarQuantidade(item.produto_id)}>
             <Text style={styles.botao_quantidade}>+</Text>
           </TouchableOpacity>
         </View>
@@ -90,7 +93,10 @@ export default function VerCarrinho() {
   );
 
   const calcularSubtotal = () => {
-    return produtos.reduce((total, produto) => total + produto.price * produto.quantity, 0);
+    if (Array.isArray(produtos) && produtos.length > 0) {
+      return produtos.reduce((total, produto) => total + produto.price * produto.quantity, 0);
+    }
+    return 0; // Retorna 0 caso não haja produtos
   };
 
   const TAXA_ENTREGA = 5.99;
@@ -112,7 +118,7 @@ export default function VerCarrinho() {
       </TouchableOpacity>
 
       {produtos.map((produto) => (
-        <View key={produto.product_id} style={styles.lista_produtos}>
+        <View key={produto.produto_id} style={styles.lista_produtos}>
           {renderizarProduto({ item: produto })}
         </View>
       ))}
@@ -209,26 +215,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 10,
   },
-  // Estilos para a seção "Peça Também"
-  titulo_secao: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  lista_recomendada: {
-    paddingBottom: 20,
-  },
-  produto_recomendado: {
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  imagem_recomendada: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    marginBottom: 5,
-  },
-  // Estilos para o resumo de valores
   resumo_valores: {
     paddingVertical: 15,
     borderTopWidth: 1,

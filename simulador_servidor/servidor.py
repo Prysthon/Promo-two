@@ -19,10 +19,10 @@ socketio = SocketIO(
 # Dicionário global para a sacola
 sacola = {
     1: [  # Simulação de uma sacola com sale_id = 1
-        {'sale_id': 1, 'product_id': 1, 'quantity': 2, 
+        {'sale_id': 1, 'produto_id': 1, 'quantity': 2, 
          'price': 100.00, 'nome': 'teste1', 'imagem': 'https://via.placeholder.com/100' 
         },
-        {'sale_id': 1, 'product_id': 2, 'quantity': 1, 
+        {'sale_id': 1, 'produto_id': 2, 'quantity': 1, 
          'price': 50.00, 'nome': 'teste2', 'imagem': 'https://via.placeholder.com/100'
         }
     ]
@@ -98,7 +98,7 @@ def handle_updateSacola(data):
         message = f'Sacola da venda {sale_id} esvaziada'
     else:
         message = 'Ação inválida'
-
+    print(message)
     emit('sacolaAtualizada', {'message': message})
 
 # Eventos para manipulação de endereço e token
@@ -183,15 +183,22 @@ def getProdutosDB(promotion=None, user_id=None, category=None, avaliable=None, a
     return produtos
 
 def addProdutoSacola(sale_id, product_id, quantity, price):
-    # Adiciona o produto à sacola da venda especificada
+    # Adiciona ou atualiza o produto à sacola da venda especificada
     sale_item = {
         'sale_id': sale_id,
-        'product_id': product_id,
+        'produto_id': product_id,
         'quantity': quantity,
         'price': price
     }
     if sale_id not in sacola:
         sacola[sale_id] = []
+    # Verifica se o produto já existe na sacola
+    for item in sacola[sale_id]:
+        if item['produto_id'] == product_id:
+            # Atualiza a quantidade do produto
+            item['quantity'] = quantity
+            return  # Sai da função, pois o produto foi atualizado
+    # Se o produto não existir, adiciona o produto à sacola
     sacola[sale_id].append(sale_item)
 
 def delProdutoSacola(sale_id, product_id):
