@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_socketio import SocketIO, emit
 import eventlet
 import eventlet.green.socket  # Necessário para compatibilidade com Eventlet
+from mocks.enderecos import enderecos
 
 # Aplicação Flask
 app = Flask(__name__)
@@ -98,6 +99,57 @@ def handle_updateSacola(data):
     else:
         message = 'Ação inválida'
     emit('sacolaAtualizada', {'message': message})
+
+# Eventos para pegar, adicionar e retirar endereco(s)
+@socketio.on('getEnderecosCliente')
+def handle_getEnderecosCliente(data):
+    user_id = data.get('user_id')
+    enderecos_cliente = enderecos.get(user_id, [])
+    
+    if not enderecos_cliente:
+        emit('enderecoNaoEncontrado', {'message': 'Nenhum endereço encontrado para este usuário.'})
+    else:
+        emit('enderecosCliente', {'enderecos': enderecos_cliente})
+
+@socketio.on('deleteEnderecoCliente')
+def handle_deleteEnderecoCliente(data):
+    user_id = data.get('user_id')
+    nome_endereco = data.get('nome_endereco')
+
+    if user_id not in enderecos:
+        emit('erroDelecaoEndereco', {'message': 'Usuário não encontrado.'})
+        return
+    
+    enderecos_cliente = enderecos[user_id]
+    endereco_encontrado = False
+
+    for endereco in enderecos_cliente:
+        if endereco['nome'] == nome_endereco:
+            enderecos_cliente.remove(endereco)
+            endereco_encontrado = True
+            break
+    
+    if endereco_encontrado:
+        emit('enderecoDeletado', {'message': 'Endereço deletado com sucesso.'})
+    else:
+        emit('erroDelecaoEndereco', {'message': 'Endereço não encontrado.'})
+
+@socketio.on('addEnderecoCliente')
+def handle_addEnderecoCliente(data):
+    user_id = data.get('user_id')
+    novo_endereco = data.get('endereco')
+
+    if not novo_endereco:
+        emit('erroAdicaoEndereco', {'message': 'Dados de endereço inválidos.'})
+        return
+
+    if user_id not in enderecos:
+        enderecos[user_id] = []
+
+    # Adiciona o novo endereço
+    enderecos[user_id].append(novo_endereco)
+    
+    emit('enderecoAdicionado', {'message': 'Endereço adicionado com sucesso.', 'endereco': novo_endereco})
 
 # Eventos para manipulação de endereço e token
 @socketio.on('updEnderecoCliente')
