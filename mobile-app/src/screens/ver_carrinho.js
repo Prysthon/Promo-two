@@ -27,38 +27,42 @@ export default function VerCarrinho() {
       console.error('Erro ao carregar sacola:', error.message);
     }
   };
-  
-  useEffect(() => {
-    carregarSacola();  // Carrega a sacola quando o componente é montado
 
-    // Escuta atualizações da sacola via WebSocket
+  useEffect(() => {
     subscribeToSacolaAtualizada((data) => {
       if (data && data.produtos) {
         setProdutos(data.produtos);
       }
     });
-  }, [produtos]);
+  } , []);
 
-  const adicionarQuantidade = (id) => {
+  useEffect(() => {
+    carregarSacola();  // Carrega a sacola quando o componente é montado
+  }, []);
+
+  const adicionarQuantidade = async (id) => {
     const produto = produtos.find(p => p.produto_id === id);
     if (produto) {
-      addProdutoSacola(sale_id, id, produto.quantity + 1, produto.price);
+      await addProdutoSacola(sale_id, id, produto.quantity + 1, produto.price);
+      carregarSacola(); // Recarregar a sacola para atualizar o estado
     }
   };
 
-  const diminuirQuantidade = (id) => {
+  const diminuirQuantidade = async (id) => {
     const produto = produtos.find(p => p.produto_id === id);
     if (produto) {
       if (produto.quantity > 1) {
-        addProdutoSacola(sale_id, id, produto.quantity - 1, produto.price);
+        await addProdutoSacola(sale_id, id, produto.quantity - 1, produto.price);
       } else {
-        removeProdutoSacola(sale_id, id);
+        await removeProdutoSacola(sale_id, id);
       }
+      carregarSacola(); // Recarregar a sacola para atualizar o estado
     }
   };
 
-  const removerProduto = (id) => {
-    removeProdutoSacola(sale_id, id);
+  const removerProduto = async (id) => {
+    await removeProdutoSacola(sale_id, id);
+    carregarSacola(); // Recarregar a sacola para atualizar o estado
   };
 
   const handleProdutoPress = (produto) => {
@@ -104,7 +108,8 @@ export default function VerCarrinho() {
   const total = subtotal + TAXA_ENTREGA;
 
   const finalizarCompra = () => {
-    navigation.navigate('Checkout');
+    console.log(produtos)
+    // navigation.navigate('Checkout');
   };
 
   return (

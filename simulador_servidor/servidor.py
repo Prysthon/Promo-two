@@ -86,7 +86,6 @@ def handle_updateSacola(data):
     product_id = data.get('product_id')
     quantity = data.get('quantity', 1)
     price = data.get('price', 0.0)
-
     if action == 'add':
         addProdutoSacola(sale_id, product_id, quantity, price)
         message = f'Produto {product_id} adicionado à sacola da venda {sale_id}'
@@ -98,7 +97,6 @@ def handle_updateSacola(data):
         message = f'Sacola da venda {sale_id} esvaziada'
     else:
         message = 'Ação inválida'
-    print(message)
     emit('sacolaAtualizada', {'message': message})
 
 # Eventos para manipulação de endereço e token
@@ -204,7 +202,7 @@ def addProdutoSacola(sale_id, product_id, quantity, price):
 def delProdutoSacola(sale_id, product_id):
     # Remove o produto da sacola da venda especificada
     if sale_id in sacola:
-        sacola[sale_id] = [item for item in sacola[sale_id] if item['product_id'] != product_id]
+        sacola[sale_id] = [item for item in sacola[sale_id] if item['produto_id'] != product_id]
         if not sacola[sale_id]:
             del sacola[sale_id]
 
