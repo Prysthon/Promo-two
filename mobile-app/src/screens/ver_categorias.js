@@ -1,25 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import { getCategorias } from '../services/servico_get_categorias';
 
 export default function VerCategoria() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [categorias, setCategorias] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
-  const categories = [
-    { id: '1', name: 'Elétricos', icon: 'bulb-outline' },
-    { id: '2', name: 'Hidráulicos', icon: 'water-outline' },
-    { id: '3', name: 'Ferragens', icon: 'hammer-outline' },
-    { id: '4', name: 'Utensílios', icon: 'restaurant-outline' },
-    { id: '5', name: 'Roupas', icon: 'shirt-outline' },
-    { id: '6', name: 'Calçados', icon: 'walk-outline' },
-    { id: '7', name: 'Acessórios', icon: 'bag-handle-outline' },
-    { id: '8', name: 'Alimentos', icon: 'fast-food-outline' },
-    { id: '9', name: 'Bebidas', icon: 'wine-outline' },
-    { id: '10', name: 'Higiene', icon: 'hand-left-outline' },
-    { id: '11', name: 'Beleza', icon: 'color-palette-outline' },
-  ];
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      setLoading(true);
+      const response = await getCategorias();
+      if (response.success) {
+        setCategorias(response.categorias);
+      } else {
+        console.log(response.message);
+      }
+      setLoading(false);
+    };
+    fetchCategorias();
+  }, []);
 
   const handleCategoryPress = (categoryName) => {
     navigation.navigate('VerProdutosCategoria', { categoryName });
@@ -27,20 +30,20 @@ export default function VerCategoria() {
 
   const renderCategories = () => {
     const rows = [];
-    for (let i = 0; i < categories.length; i += 2) {
+    for (let i = 0; i < categorias.length; i += 2) {
       rows.push(
         <View key={i} style={styles.categoryRow}>
-          <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(categories[i].name)}>
+          <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(categorias[i].name)}>
             <View style={styles.categoryIconContainer}>
-              <Icon name={categories[i].icon} size={50} color="#fff" />
-              <Text style={styles.categoryName}>{categories[i].name}</Text>
+              <Icon name={categorias[i].icon} size={50} color="#fff" />
+              <Text style={styles.categoryName}>{categorias[i].name}</Text>
             </View>
           </TouchableOpacity>
-          {categories[i + 1] && (
-            <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(categories[i + 1].name)}>
+          {categorias[i + 1] && (
+            <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(categorias[i + 1].name)}>
               <View style={styles.categoryIconContainer}>
-                <Icon name={categories[i + 1].icon} size={50} color="#fff" />
-                <Text style={styles.categoryName}>{categories[i + 1].name}</Text>
+                <Icon name={categorias[i + 1].icon} size={50} color="#fff" />
+                <Text style={styles.categoryName}>{categorias[i + 1].name}</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -61,7 +64,7 @@ export default function VerCategoria() {
       />
       <Text style={styles.sectionTitle}>Categorias</Text>
       <View style={styles.categoriesContainer}>
-        {renderCategories()}
+        {loading ? <Text>Carregando...</Text> : renderCategories()}
       </View>
     </ScrollView>
   );

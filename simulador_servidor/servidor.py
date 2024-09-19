@@ -4,6 +4,7 @@ import eventlet
 import eventlet.green.socket  # Necessário para compatibilidade com Eventlet
 from mocks.enderecos import enderecos
 from mocks.produtos import produtos  # Importando o mock dos produtos
+from mocks.categorias import categories # Importando o mock das categorias
 
 # Aplicação Flask
 app = Flask(__name__)
@@ -29,6 +30,11 @@ sacola = {
         }
     ]
 }
+
+@app.route('/api/categorias', methods=['GET'])
+def getCategorias():
+    # Retorna as categorias simuladas do banco de dados (mocks/categorias.py)
+    return jsonify(categories), 200
 
 # Nova rota HTTP para acessar os produtos
 @app.route('/api/products', methods=['GET'])
