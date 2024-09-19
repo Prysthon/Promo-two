@@ -3,6 +3,7 @@ from flask_socketio import SocketIO, emit
 import eventlet
 import eventlet.green.socket  # Necessário para compatibilidade com Eventlet
 from mocks.enderecos import enderecos
+from mocks.produtos import produtos  # Importando o mock dos produtos
 
 # Aplicação Flask
 app = Flask(__name__)
@@ -28,6 +29,28 @@ sacola = {
         }
     ]
 }
+
+# Nova rota HTTP para acessar os produtos
+@app.route('/api/products', methods=['GET'])
+def api_get_produtos():
+    category = request.args.get('category')
+    avaliable = request.args.get('avaliable', 'Sim')
+    active = request.args.get('active', 'True') == 'True'
+    # Busca os produtos de acordo com os parâmetros passados
+    produtos_filtrados = getProdutosDB(category=category, avaliable=avaliable, active=active)
+    # Retorna os produtos filtrados como JSON
+    return jsonify(produtos_filtrados), 200
+
+# Função auxiliar para buscar produtos
+def getProdutosDB(category=None, avaliable=None, active=True):
+    produtos_filtrados = produtos
+    if category:
+        produtos_filtrados = [p for p in produtos_filtrados if p.get('category') == category]
+    if avaliable:
+        produtos_filtrados = [p for p in produtos_filtrados if p.get('avaliable') == avaliable]
+    # produtos_filtrados = [p for p in produtos_filtrados if p.get('active') == active]
+
+    return produtos_filtrados
 
 @app.route('/connect', methods=['POST', 'GET'])
 # def index():
@@ -68,7 +91,6 @@ def handle_getProdutos(data):
     avaliable = data.get('avaliable')      # 'Sim' ou 'Nao'
     active = data.get('active', True)
 
-    produtos = getProdutosDB(promotion, user_id, category, avaliable, active)
     emit('produtos', {'produtos': produtos})
 
 # Eventos para manipulação da sacola
@@ -177,60 +199,6 @@ def handle_saveChamado(data):
     status = data.get('status', 'aberto')
     resultado = saveChamadoCliente(chamado_id, user_id, assunto, descricao, user_type, status)
     emit('chamadoSalvo', {'message': resultado})
-
-# Funções auxiliares
-def getProdutosDB(promotion=None, user_id=None, category=None, avaliable=None, active=True):
-    # Simula a obtenção de produtos com base nos filtros fornecidos
-    produtos = [
-        {
-            'id': 1,
-            'user_id': 1,
-            'category': 'Eletrônicos',
-            'image': 'products/produto_a.jpg',
-            'name': 'Produto A',
-            'description': 'Descrição do Produto A',
-            'price': 100.00,
-            'quantity': 10,
-            'avaliable': 'Sim',
-            'promotion': 'Nao',
-            'commission': 10.00,
-            'earnings': 90.00,
-            'active': True
-        },
-        {
-            'id': 2,
-            'user_id': 2,
-            'category': 'Livros',
-            'image': 'products/produto_b.jpg',
-            'name': 'Produto B',
-            'description': 'Descrição do Produto B',
-            'price': 50.00,
-            'quantity': 5,
-            'avaliable': 'Sim',
-            'promotion': 'Sim',
-            'commission': 5.00,
-            'earnings': 45.00,
-            'active': True
-        },
-        # Adicione mais produtos conforme necessário
-    ]
-
-    # Filtra os produtos com base nos parâmetros
-    if promotion is not None:
-        produtos = [p for p in produtos if p.get('promotion') == promotion]
-
-    if user_id is not None:
-        produtos = [p for p in produtos if p.get('user_id') == user_id]
-
-    if category is not None:
-        produtos = [p for p in produtos if p.get('category') == category]
-
-    if avaliable is not None:
-        produtos = [p for p in produtos if p.get('avaliable') == avaliable]
-
-    produtos = [p for p in produtos if p.get('active') == active]
-
-    return produtos
 
 def addProdutoSacola(sale_id, product_id, quantity, price):
     # Adiciona ou atualiza o produto à sacola da venda especificada

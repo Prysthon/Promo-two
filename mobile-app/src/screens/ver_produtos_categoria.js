@@ -1,35 +1,33 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
+import { getProdutos } from '../services/servico_produtos'; // Importando o serviço
 
 export default function VerProdutosCategoria({ route }) {
   const { categoryName } = route.params;
+  const [produtos, setProdutos] = useState([]); // Inicialmente vazio
   const [sortBy, setSortBy] = useState('preco');
+  const [loading, setLoading] = useState(true); // Estado para o carregamento
+  const [error, setError] = useState(null); // Estado para erros na requisição
   const navigation = useNavigation();
 
-  // Mock de produtos para demonstração
-  const produtos = [
-    {
-      id: '1',
-      nome: 'Produto A',
-      preco: 50,
-      avaliacao: 4.5,
-      tempo_entrega: '2 dias',
-      distancia: '5 km',
-      imagem: 'https://via.placeholder.com/150', // URL da imagem da loja
-    },
-    {
-      id: '2',
-      nome: 'Produto B',
-      preco: 30,
-      avaliacao: 4.0,
-      tempo_entrega: '3 dias',
-      distancia: '10 km',
-      imagem: 'https://via.placeholder.com/150', // URL da imagem da loja
-    },
-    // Adicione mais produtos conforme necessário
-  ];
+  // Função para buscar os produtos da categoria ao carregar a página
+  const fetchProdutos = async () => {
+    setLoading(true); // Mostra o indicador de carregamento
+    const result = await getProdutos(categoryName); // Chama o serviço com o nome da categoria
+    if (result.success) {
+      setProdutos(result.produtos); // Define os produtos se a requisição for bem-sucedida
+    } else {
+      setError(result.message); // Define a mensagem de erro
+    }
+    setLoading(false); // Esconde o indicador de carregamento
+  };
+
+  // Usa o useEffect para chamar a função assim que a tela for carregada
+  useEffect(() => {
+    fetchProdutos();
+  }, [categoryName]); // Atualiza os produtos ao mudar de categoria
 
   // Função para ordenar os produtos com base no critério selecionado
   const ordenarProdutos = (produtos, criterio) => {
@@ -62,6 +60,19 @@ export default function VerProdutosCategoria({ route }) {
     navigation.navigate('DetalhesProduto', { produto });
   };
 
+  // Exibe o estado de carregamento ou erro, se houver
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Erro: {error}</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Categoria: {categoryName}</Text>
@@ -86,11 +97,11 @@ export default function VerProdutosCategoria({ route }) {
         {produtosOrdenados.map((produto) => (
           <TouchableOpacity key={produto.id} onPress={() => handleProductPress(produto)}>
             <View style={styles.produtoItem}>
-              <Image source={{ uri: produto.imagem }} style={styles.imagemLoja} />
+              <Image source={{ uri: produto.image }} style={styles.imagemLoja} />
               <View style={styles.produtoInfo}>
-                <Text style={styles.produtoNome}>{produto.nome}</Text>
+                <Text style={styles.produtoNome}>{produto.name}</Text>
                 <Text style={styles.produtoDetalhes}>
-                  Preço: R${produto.preco} • {produto.avaliacao}⭐
+                  Preço: R${produto.price} • {produto.avaliacao}⭐
                 </Text>
                 <Text style={styles.produtoEntrega}>
                   Tempo de Entrega: {produto.tempo_entrega} • Distância: {produto.distancia}
@@ -159,5 +170,9 @@ const styles = StyleSheet.create({
   produtoEntrega: {
     fontSize: 14,
     color: '#666',
+  },
+  errorText: {
+    fontSize: 18,
+    color: 'red',
   },
 });

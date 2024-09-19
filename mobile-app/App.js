@@ -99,86 +99,86 @@ function HomeTabs() {
 }
 
 export default function App() {
-  const requestUserPermission = async () => {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED || 
-      authStatus === messaging-AuthorizationStatus. PROVISIONAL;
-    if (enabled) {
-      console.log('Authorization status:', authStatus);
-    }
-  }
+  // const requestUserPermission = async () => {
+  //   const authStatus = await messaging().requestPermission();
+  //   const enabled =
+  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED || 
+  //     authStatus === messaging-AuthorizationStatus. PROVISIONAL;
+  //   if (enabled) {
+  //     console.log('Authorization status:', authStatus);
+  //   }
+  // }
 
-  const sendTokenToServer = async (token) => {
-    try {
-      const response = await axios.post('http://10.0.2.2:80/register-token/', {
-        token: token,
-      });
-      console.log('Token enviado com sucesso:', response.data);
-    } catch (error) {
-      if (error.response) {
-        // O servidor respondeu com um status fora do alcance de 2xx
-        console.error('Resposta do servidor:', error.response.data);
-        console.error('Status:', error.response.status);
-        console.error('Headers:', error.response.headers);
-      } else if (error.request) {
-        // A requisição foi feita mas não houve resposta
-        console.error('Sem resposta do servidor:', error.request);
-      } else {
-        // Algo aconteceu ao configurar a requisição
-        console.error('Erro:', error.message);
-      }
-    }
-  };
+  // const sendTokenToServer = async (token) => {
+  //   try {
+  //     const response = await axios.post('http://10.0.2.2:80/register-token/', {
+  //       token: token,
+  //     });
+  //     console.log('Token enviado com sucesso:', response.data);
+  //   } catch (error) {
+  //     if (error.response) {
+  //       // O servidor respondeu com um status fora do alcance de 2xx
+  //       console.error('Resposta do servidor:', error.response.data);
+  //       console.error('Status:', error.response.status);
+  //       console.error('Headers:', error.response.headers);
+  //     } else if (error.request) {
+  //       // A requisição foi feita mas não houve resposta
+  //       console.error('Sem resposta do servidor:', error.request);
+  //     } else {
+  //       // Algo aconteceu ao configurar a requisição
+  //       console.error('Erro:', error.message);
+  //     }
+  //   }
+  // };
   
 
-  useEffect (() => {
-    if(requestUserPermission()) {
-      const getToken = async () => {
-        await messaging().registerDeviceForRemoteMessages();
-        await messaging().getToken().then(token => {
-          sendTokenToServer(token)
-          console.log(token);
-        });
-      }
-      getToken()
-    } else {
-      console.log('failed token status', authStatus);
-    }
+  // useEffect (() => {
+  //   if(requestUserPermission()) {
+  //     const getToken = async () => {
+  //       await messaging().registerDeviceForRemoteMessages();
+  //       await messaging().getToken().then(token => {
+  //         sendTokenToServer(token)
+  //         console.log(token);
+  //       });
+  //     }
+  //     getToken()
+  //   } else {
+  //     console.log('failed token status', authStatus);
+  //   }
 
-    const getInicialNotificacao = async () => {
-      await messaging().getInitialNotification().then(async (remoteMessage) => {
-        if(remoteMessage) {
-          console.log(
-            'notification caused app to open from quit state:',
-            remoteMessage.notification
-          );
-        }
-      });
-    }
-    getInicialNotificacao();
+  //   const getInicialNotificacao = async () => {
+  //     await messaging().getInitialNotification().then(async (remoteMessage) => {
+  //       if(remoteMessage) {
+  //         console.log(
+  //           'notification caused app to open from quit state:',
+  //           remoteMessage.notification
+  //         );
+  //       }
+  //     });
+  //   }
+  //   getInicialNotificacao();
 
-    const getNotificacaoAppAberto = async () => {
-      messaging().onNotificationOpenedApp(async (remoteMessage) => {
-        console.log(
-          'notification caused app to open from quit state:',
-          remoteMessage.notification
-        );
-      });
-    }
-    getNotificacaoAppAberto();
+  //   const getNotificacaoAppAberto = async () => {
+  //     messaging().onNotificationOpenedApp(async (remoteMessage) => {
+  //       console.log(
+  //         'notification caused app to open from quit state:',
+  //         remoteMessage.notification
+  //       );
+  //     });
+  //   }
+  //   getNotificacaoAppAberto();
 
-    // Register background handler
-    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-      console.log('Message handled in the background!', remoteMessage);
-    });
+  //   // Register background handler
+  //   messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  //     console.log('Message handled in the background!', remoteMessage);
+  //   });
 
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  //   });
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
   return (
     <NavigationContainer>
