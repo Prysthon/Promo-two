@@ -97,7 +97,7 @@ export default function VerProdutosCategoria({ route }) {
         {produtosOrdenados.map((produto) => (
           <TouchableOpacity key={produto.id} onPress={() => handleProductPress(produto)}>
             <View style={styles.produtoItem}>
-              <Image source={{ uri: produto.image }} style={styles.imagemLoja} />
+              <Image source={{ uri: produto.imagem }} style={styles.imagemLoja} />
               <View style={styles.produtoInfo}>
                 <Text style={styles.produtoNome}>{produto.name}</Text>
                 <Text style={styles.produtoDetalhes}>

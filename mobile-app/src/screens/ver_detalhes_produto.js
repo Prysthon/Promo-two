@@ -6,11 +6,14 @@ export default function VerDetalhesProduto({ route, navigation }) {
 
   const [quantidade, setQuantidade] = useState(1);
 
+  useEffect(() => {
+    console.log(produto)
+  })
   // Função para adicionar ao carrinho
   const adicionarAoCarrinho = () => {
     Alert.alert(
       'Adicionado a Sacola', 
-      `${produto.nome} (x${quantidade}) adicionado à sacola.`,
+      `${produto.name} (x${quantidade}) adicionado à sacola.`,
       [
         { text: 'OK', onPress: () => navigation.goBack() } // Redireciona para a página anterior ao clicar "OK"
       ]
@@ -25,11 +28,11 @@ export default function VerDetalhesProduto({ route, navigation }) {
       </View>
 
       {/* Nome do Produto */}
-      <Text style={styles.nome_produto}>{produto.nome}</Text>
+      <Text style={styles.nome_produto}>{produto.name}</Text>
 
       {/* Preço e Tamanho (se aplicável) */}
       <View style={styles.preco_tamanho_container}>
-        <Text style={styles.preco}>{produto.preco}</Text>
+        <Text style={styles.preco}>R$ {produto.price},00</Text>
         {produto.tamanho && <Text style={styles.tamanho}>Tamanho: {produto.tamanho}</Text>}
       </View>
 
@@ -53,7 +56,7 @@ export default function VerDetalhesProduto({ route, navigation }) {
 
       {/* Descrição do Produto */}
       <Text style={styles.descricao_titulo}>Descrição do Produto</Text>
-      <Text style={styles.descricao}>{produto.descricao || 'Este produto não possui descrição disponível.'}</Text>
+      <Text style={styles.descricao}>{produto.description || 'Este produto não possui descrição disponível.'}</Text>
     </ScrollView>
   );
 }

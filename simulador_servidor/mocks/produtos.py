@@ -2,7 +2,7 @@ produtos = [
   {
     'id': 1,
     'category': 'Elétricos',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Lâmpada LED',
     'description': 'Lâmpada LED 12W',
     'price': 15.00,
@@ -17,7 +17,7 @@ produtos = [
   {
     'id': 2,
     'category': 'Hidráulicos',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Torneira',
     'description': 'Torneira de metal',
     'price': 30.00,
@@ -32,7 +32,7 @@ produtos = [
   {
     'id': 3,
     'category': 'Ferragens',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Martelo',
     'description': 'Martelo de aço',
     'price': 20.00,
@@ -47,7 +47,7 @@ produtos = [
   {
     'id': 4,
     'category': 'Utensílios',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Panela',
     'description': 'Panela de ferro',
     'price': 120.00,
@@ -62,7 +62,7 @@ produtos = [
   {
     'id': 5,
     'category': 'Roupas',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Camiseta',
     'description': 'Camiseta de algodão',
     'price': 35.00,
@@ -77,7 +77,7 @@ produtos = [
   {
     'id': 6,
     'category': 'Elétricos',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Ferro de Passar',
     'description': 'Ferro de passar a vapor',
     'price': 80.00,
@@ -92,7 +92,7 @@ produtos = [
   {
     'id': 7,
     'category': 'Elétricos',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Liquidificador',
     'description': 'Liquidificador 500W',
     'price': 60.00,
@@ -107,7 +107,7 @@ produtos = [
   {
     'id': 8,
     'category': 'Hidráulicos',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Chuveiro Elétrico',
     'description': 'Chuveiro 5500W',
     'price': 150.00,
@@ -122,7 +122,7 @@ produtos = [
   {
     'id': 9,
     'category': 'Hidráulicos',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Caixa D’água',
     'description': 'Caixa d’água 300 litros',
     'price': 200.00,
@@ -137,7 +137,7 @@ produtos = [
   {
     'id': 10,
     'category': 'Ferragens',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Parafusos',
     'description': 'Parafusos variados',
     'price': 10.00,
@@ -152,7 +152,7 @@ produtos = [
   {
     'id': 11,
     'category': 'Ferragens',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Chave de Fenda',
     'description': 'Chave de fenda Phillips',
     'price': 25.00,
@@ -167,7 +167,7 @@ produtos = [
   {
     'id': 12,
     'category': 'Utensílios',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Faca de Cozinha',
     'description': 'Faca de aço inox',
     'price': 50.00,
@@ -182,7 +182,7 @@ produtos = [
   {
     'id': 13,
     'category': 'Utensílios',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Espátula',
     'description': 'Espátula de silicone',
     'price': 15.00,
@@ -197,7 +197,7 @@ produtos = [
   {
     'id': 14,
     'category': 'Roupas',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Calça Jeans',
     'description': 'Calça jeans masculina',
     'price': 80.00,
@@ -212,7 +212,7 @@ produtos = [
   {
     'id': 15,
     'category': 'Roupas',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Vestido',
     'description': 'Vestido de verão',
     'price': 100.00,
@@ -227,7 +227,7 @@ produtos = [
   {
     'id': 16,
     'category': 'Calçados',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Tênis',
     'description': 'Tênis esportivo',
     'price': 120.00,
@@ -242,7 +242,7 @@ produtos = [
   {
     'id': 17,
     'category': 'Calçados',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Sandália',
     'description': 'Sandália confortável',
     'price': 60.00,
@@ -257,7 +257,7 @@ produtos = [
   {
     'id': 18,
     'category': 'Acessórios',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Relógio',
     'description': 'Relógio analógico',
     'price': 250.00,
@@ -272,7 +272,7 @@ produtos = [
   {
     'id': 19,
     'category': 'Acessórios',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Bolsa',
     'description': 'Bolsa de couro',
     'price': 180.00,
@@ -287,7 +287,7 @@ produtos = [
   {
     'id': 20,
     'category': 'Alimentos',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Arroz',
     'description': 'Arroz tipo 1 - 5kg',
     'price': 25.00,
@@ -302,7 +302,7 @@ produtos = [
   {
     'id': 21,
     'category': 'Alimentos',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Feijão',
     'description': 'Feijão carioca - 1kg',
     'price': 8.00,
@@ -317,7 +317,7 @@ produtos = [
   {
     'id': 22,
     'category': 'Bebidas',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Cerveja',
     'description': 'Cerveja lata - 350ml',
     'price': 5.00,
@@ -332,7 +332,7 @@ produtos = [
   {
     'id': 23,
     'category': 'Bebidas',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Suco de Laranja',
     'description': 'Suco natural - 1 litro',
     'price': 7.00,
@@ -347,7 +347,7 @@ produtos = [
   {
     'id': 24,
     'category': 'Higiene',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Sabonete',
     'description': 'Sabonete líquido',
     'price': 3.50,
@@ -363,7 +363,7 @@ produtos = [
     'id': 25,
     'category': 'Higiene',
     'id': 26,
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Shampoo',
     'description': 'Shampoo anticaspa',
     'price': 15.00,
@@ -377,7 +377,7 @@ produtos = [
   },
   {
     'category': 'Beleza',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Batom',
     'description': 'Batom matte',
     'price': 20.00,
@@ -392,7 +392,7 @@ produtos = [
   {
     'id': 27,
     'category': 'Beleza',
-    'image': 'https://via.placeholder.com/100',
+    'imagem': 'https://via.placeholder.com/100',
     'name': 'Perfume',
     'description': 'Perfume importado - 100ml',
     'price': 150.00,
