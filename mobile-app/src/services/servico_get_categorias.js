@@ -7,7 +7,6 @@ export const getCategorias = async () => {
         'Content-Type': 'application/json',
       },
     });
-    console.log(response)
     const data = await response.json();
 
     if (response.status === 200) {

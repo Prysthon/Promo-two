@@ -22,10 +22,10 @@ socketio = SocketIO(
 # Dicionário global para a sacola
 sacola = {
     1: [  # Simulação de uma sacola com sale_id = 1
-        {'sale_id': 1, 'produto_id': 1, 'quantity': 2, 
+        {'sale_id': 1, 'produto_id': 1000, 'quantity': 2, 
          'price': 100.00, 'nome': 'teste1', 'imagem': 'https://via.placeholder.com/100' 
         },
-        {'sale_id': 1, 'produto_id': 2, 'quantity': 1, 
+        {'sale_id': 1, 'produto_id': 2000, 'quantity': 1, 
          'price': 50.00, 'nome': 'teste2', 'imagem': 'https://via.placeholder.com/100'
         }
     ]
@@ -115,8 +115,10 @@ def handle_updateSacola(data):
     product_id = data.get('product_id')
     quantity = data.get('quantity', 1)
     price = data.get('price', 0.0)
+    nome = data.get('nome', 'não encontrado')
+    imagem = data.get('imagem', '')
     if action == 'add':
-        addProdutoSacola(sale_id, product_id, quantity, price)
+        addProdutoSacola(sale_id, product_id, quantity, price, nome, imagem)
         message = f'Produto {product_id} adicionado à sacola da venda {sale_id}'
     elif action == 'remove':
         delProdutoSacola(sale_id, product_id)
@@ -206,13 +208,15 @@ def handle_saveChamado(data):
     resultado = saveChamadoCliente(chamado_id, user_id, assunto, descricao, user_type, status)
     emit('chamadoSalvo', {'message': resultado})
 
-def addProdutoSacola(sale_id, product_id, quantity, price):
+def addProdutoSacola(sale_id, product_id, quantity, price, nome, imagem):
     # Adiciona ou atualiza o produto à sacola da venda especificada
     sale_item = {
         'sale_id': sale_id,
         'produto_id': product_id,
         'quantity': quantity,
-        'price': price
+        'price': price,
+        'nome': nome,
+        'imagem': imagem
     }
     if sale_id not in sacola:
         sacola[sale_id] = []

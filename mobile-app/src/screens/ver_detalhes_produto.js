@@ -1,23 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { addProdutoSacola } from '../services/servico_sacola';  // Importando a função addProdutoSacola
 
 export default function VerDetalhesProduto({ route, navigation }) {
   const { produto } = route.params;
+  const sale_id = 1;  // Exemplo de sale_id (pode ser dinâmico se necessário)
 
   const [quantidade, setQuantidade] = useState(1);
 
-  useEffect(() => {
-    console.log(produto)
-  })
   // Função para adicionar ao carrinho
-  const adicionarAoCarrinho = () => {
-    Alert.alert(
-      'Adicionado a Sacola', 
-      `${produto.name} (x${quantidade}) adicionado à sacola.`,
-      [
-        { text: 'OK', onPress: () => navigation.goBack() } // Redireciona para a página anterior ao clicar "OK"
-      ]
-    );
+  const adicionarAoCarrinho = async () => {
+    try {
+      // Chama a função addProdutoSacola passando os parâmetros corretos
+      await addProdutoSacola(
+        sale_id, 
+        produto.id, 
+        quantidade, 
+        produto.price, 
+        produto.name, 
+        produto.imagem
+      );
+
+      // Exibe o alerta de sucesso
+      Alert.alert(
+        'Adicionado à Sacola',
+        `${produto.name} (x${quantidade}) adicionado à sacola.`,
+        [
+          { text: 'OK', onPress: () => navigation.goBack() } // Redireciona para a página anterior ao clicar "OK"
+        ]
+      );
+    } catch (error) {
+      console.error('Erro ao adicionar produto à sacola:', error);
+      Alert.alert('Erro', 'Não foi possível adicionar o produto à sacola. Tente novamente.');
+    }
   };
 
   return (
@@ -32,7 +47,7 @@ export default function VerDetalhesProduto({ route, navigation }) {
 
       {/* Preço e Tamanho (se aplicável) */}
       <View style={styles.preco_tamanho_container}>
-        <Text style={styles.preco}>R$ {produto.price},00</Text>
+        <Text style={styles.preco}>R$ {produto.price.toFixed(2)}</Text>
         {produto.tamanho && <Text style={styles.tamanho}>Tamanho: {produto.tamanho}</Text>}
       </View>
 

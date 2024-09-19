@@ -35,13 +35,15 @@ export const getProdutosSacola = (sale_id) => {
 };
 
 // Função para adicionar um produto à sacola
-export const addProdutoSacola = (sale_id, product_id, quantity, price) => {
+export const addProdutoSacola = (sale_id, product_id, quantity, price, nome, imagem) => {
   socket.emit('updateSacola', {
     action: 'add',
     sale_id,
     product_id,
     quantity,
-    price
+    price,
+    nome,
+    imagem
   });
 };
 
