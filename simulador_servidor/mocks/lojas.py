@@ -1,5 +1,3 @@
-# mock_lojas.py
-
 # Mock de produtos, conforme fornecido
 produtos = [
   {
@@ -27,6 +25,7 @@ produtos = [
     'quantity': 50,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 20.00,
     'active': True,
     'tempo_entrega': '5 dias',
     'avaliacao': 4.2,
@@ -57,6 +56,7 @@ produtos = [
     'quantity': 10,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 100.00,
     'active': True,
     'tempo_entrega': '7 dias',
     'avaliacao': 4.8,
@@ -102,6 +102,7 @@ produtos = [
     'quantity': 40,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 40.00,
     'active': True,
     'tempo_entrega': '4 dias',
     'avaliacao': 4.4,
@@ -132,6 +133,7 @@ produtos = [
     'quantity': 15,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 150.00,
     'active': True,
     'tempo_entrega': '6 dias',
     'avaliacao': 4.5,
@@ -162,6 +164,7 @@ produtos = [
     'quantity': 60,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 20.00,
     'active': True,
     'tempo_entrega': '2 dias',
     'avaliacao': 4.2,
@@ -192,6 +195,7 @@ produtos = [
     'quantity': 150,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 10.00,
     'active': True,
     'tempo_entrega': '2 dias',
     'avaliacao': 4.3,
@@ -207,6 +211,7 @@ produtos = [
     'quantity': 120,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 15.00,
     'active': True,
     'tempo_entrega': '5 dias',
     'avaliacao': 4.5,
@@ -237,6 +242,7 @@ produtos = [
     'quantity': 90,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 110.00,
     'active': True,
     'tempo_entrega': '5 dias',
     'avaliacao': 4.4,
@@ -267,6 +273,7 @@ produtos = [
     'quantity': 40,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 150.00,
     'active': True,
     'tempo_entrega': '6 dias',
     'avaliacao': 4.7,
@@ -312,6 +319,7 @@ produtos = [
     'quantity': 500,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 1.00,
     'active': True,
     'tempo_entrega': '2 dias',
     'avaliacao': 4.4,
@@ -327,6 +335,7 @@ produtos = [
     'quantity': 1000,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 1.00,
     'active': True,
     'tempo_entrega': '3 dias',
     'avaliacao': 4.2,
@@ -357,6 +366,7 @@ produtos = [
     'quantity': 600,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 2.00,
     'active': True,
     'tempo_entrega': '1 dia',
     'avaliacao': 4.0,
@@ -365,7 +375,6 @@ produtos = [
   {
     'id': 25,
     'category': 'Higiene',
-    'id': 26,
     'imagem': 'https://via.placeholder.com/100',
     'name': 'Shampoo',
     'description': 'Shampoo anticaspa',
@@ -379,6 +388,7 @@ produtos = [
     'distancia': '10 km'
   },
   {
+    'id': 26,
     'category': 'Beleza',
     'imagem': 'https://via.placeholder.com/100',
     'name': 'Batom',
@@ -387,6 +397,7 @@ produtos = [
     'quantity': 180,
     'avaliable': 'Sim',
     'promotion': 'Sim',
+    'promotion_price': 15.00,
     'active': True,
     'tempo_entrega': '3 dias',
     'avaliacao': 4.6,
@@ -411,62 +422,50 @@ produtos = [
 
 # Mock de lojas, cada loja com uma lista de produtos
 lojas = [
-  {
-    'id': 1,
-    'nome': 'Loja Elétrica',
-    'categoria': 'Elétricos',
-    'produtos': [produtos[0], produtos[5], produtos[6]],  # Produtos da categoria Elétricos
-    'distancia': '5 km',
-    'avaliacao': 4.8,
-    'imagem': 'https://via.placeholder.com/150',
-    'tempo_entrega': '30 min',
-    'aberta': True
-  },
-  {
-    'id': 2,
-    'nome': 'Casa das Ferragens',
-    'categoria': 'Ferragens',
-    'produtos': [produtos[2], produtos[9], produtos[10]],  # Produtos da categoria Ferragens
-    'distancia': '8 km',
-    'avaliacao': 4.5,
-    'imagem': 'https://via.placeholder.com/150',
-    'tempo_entrega': '45 min',
-    'aberta': False
-  },
-  {
-    'id': 3,
-    'nome': 'Lojas Hidráulicas',
-    'categoria': 'Hidráulicos',
-    'produtos': [produtos[1], produtos[7], produtos[8]],  # Produtos da categoria Hidráulicos
-    'distancia': '7 km',
-    'avaliacao': 4.6,
-    'imagem': 'https://via.placeholder.com/150',
-    'tempo_entrega': '40 min',
-    'aberta': True
-  },
-  {
-    'id': 4,
-    'nome': 'Casa dos Utensílios',
-    'categoria': 'Utensílios',
-    'produtos': [produtos[11], produtos[12]],  # Produtos da categoria Utensílios
-    'distancia': '12 km',
-    'avaliacao': 4.7,
-    'imagem': 'https://via.placeholder.com/150',
-    'tempo_entrega': '50 min',
-    'aberta': True
-  },
-  {
-    'id': 5,
-    'nome': 'Loja de Alimentos',
-    'categoria': 'Alimentos',
-    'produtos': [produtos[19], produtos[20]],  # Produtos da categoria Alimentos
-    'distancia': '10 km',
-    'avaliacao': 4.9,
-    'imagem': 'https://via.placeholder.com/150',
-    'tempo_entrega': '25 min',
-    'aberta': True
-  }
-  # Adicione mais lojas conforme necessário...
+    {
+        'id': 1,
+        'nome': 'Mega Loja',
+        'categorias': ['Elétricos', 'Ferragens', 'Acessórios'],
+        'produtos': [produtos[0], produtos[2], produtos[18], produtos[19], produtos[6]],
+        'distancia': '5 km',
+        'avaliacao': 4.8,
+        'imagem': 'https://via.placeholder.com/150',
+        'tempo_entrega': '30 min',
+        'aberta': True
+    },
+    {
+        'id': 2,
+        'nome': 'Casa & Construção',
+        'categorias': ['Hidráulicos', 'Utensílios'],
+        'produtos': [produtos[1], produtos[7], produtos[11], produtos[12]],
+        'distancia': '8 km',
+        'avaliacao': 4.6,
+        'imagem': 'https://via.placeholder.com/150',
+        'tempo_entrega': '40 min',
+        'aberta': True
+    },
+    {
+        'id': 3,
+        'nome': 'Loja Multi',
+        'categorias': ['Roupas', 'Calçados', 'Beleza'],
+        'produtos': [produtos[4], produtos[14], produtos[16], produtos[25], produtos[26]],
+        'distancia': '10 km',
+        'avaliacao': 4.9,
+        'imagem': 'https://via.placeholder.com/150',
+        'tempo_entrega': '25 min',
+        'aberta': True
+    },
+    {
+        'id': 4,
+        'nome': 'Supermercado do Bairro',
+        'categorias': ['Alimentos', 'Bebidas', 'Higiene'],
+        'produtos': [produtos[20], produtos[21], produtos[22], produtos[24]],
+        'distancia': '6 km',
+        'avaliacao': 4.7,
+        'imagem': 'https://via.placeholder.com/150',
+        'tempo_entrega': '15 min',
+        'aberta': True
+    }
 ]
 
 # Função que retorna as lojas simuladas

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getProdutosLoja } from '../services/servico_buscar_lojas';  // Importando a função para buscar produtos via WebSocket
@@ -12,20 +12,22 @@ export default function ProdutosLoja({ route }) {
   const [exibirPromocoes, setExibirPromocoes] = useState(true);
   const [produtos, setProdutos] = useState([]);
   const [loja, setLoja] = useState(null);
+  const [categorias, setCategorias] = useState([]);
+  const [pesquisa, setPesquisa] = useState('');  // Novo estado para a pesquisa
 
   // Buscando os produtos da loja assim que o componente for montado
   useEffect(() => {
     async function fetchProdutos() {
       try {
         const response = await getProdutosLoja(lojaId);
-        // Definindo nome da loja
         setLoja(response.produtosLoja.nome);
-        // Verifica se existe a chave produtos dentro de produtosLoja
+        setCategorias(response.produtosLoja.categorias); 
+
         if (response.produtosLoja && Array.isArray(response.produtosLoja.produtos)) {
           setProdutos(response.produtosLoja.produtos);
         } else {
           console.error('Formato inesperado de dados:', response);
-          setProdutos([]); // Garante que produtos será sempre um array
+          setProdutos([]); 
         }
       } catch (error) {
         console.error('Erro ao buscar produtos da loja:', error);
@@ -41,10 +43,12 @@ export default function ProdutosLoja({ route }) {
   };
 
   const renderizarProdutosPorCategoria = (categoria) => {
-    // Verificando se produtos está no formato correto
-    const produtosFiltrados = (Array.isArray(produtos) ? produtos : []).filter(
-      (produto) => produto.category === categoria && (exibirPromocoes ? produto.promotion === 'Sim' : true)
-    );
+    const produtosFiltrados = (Array.isArray(produtos) ? produtos : [])
+      .filter((produto) => 
+        produto.category === categoria && 
+        (exibirPromocoes ? produto.promotion === 'Sim' : true) &&
+        produto.name.toLowerCase().includes(pesquisa.toLowerCase()) // Filtrando pelo nome
+      );
 
     if (produtosFiltrados.length === 0) return null;
 
@@ -62,8 +66,8 @@ export default function ProdutosLoja({ route }) {
               <Text style={styles.nome_produto}>{item.name}</Text>
               {item.promotion === 'Sim' ? (
                 <View>
-                  <Text style={styles.preco_promocao}>Promoção</Text>
-                  <Text style={styles.preco_original}>{`R$ ${item.price}`}</Text>
+                  <Text style={styles.preco_promocao}>{`R$ ${item.promotion_price},00`}</Text>
+                  <Text style={styles.preco_original}>{`R$ ${item.price},00`}</Text>
                 </View>
               ) : (
                 <Text style={styles.preco_produto}>{`R$ ${item.price}`}</Text>
@@ -91,6 +95,14 @@ export default function ProdutosLoja({ route }) {
         <Image source={{ uri: 'https://via.placeholder.com/100' }} style={styles.imagem_loja} />
       </View>
 
+      {/* Barra de pesquisa */}
+      <TextInput
+        style={styles.inputPesquisa}
+        placeholder="Pesquisar produto..."
+        value={pesquisa}
+        onChangeText={setPesquisa}
+      />
+
       {/* Botões para alternar entre promoção e todos os produtos */}
       <View style={styles.botoesFiltro}>
         <TouchableOpacity
@@ -107,8 +119,18 @@ export default function ProdutosLoja({ route }) {
         </TouchableOpacity>
       </View>
 
+      {/* Categorias disponíveis - Scroll horizontal */}
+      <Text style={styles.categoria_titulo}>Categorias</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categorias_container}>
+        {categorias.map((categoria) => (
+          <View key={categoria} style={styles.item_categoria}>
+            <Text style={styles.nome_categoria}>{categoria}</Text>
+          </View>
+        ))}
+      </ScrollView>
+
       {/* Renderizando produtos por categoria */}
-      {['Elétricos', 'Hidráulicos', 'Ferragens', 'Utensílios', 'Alimentos', 'Bebidas'].map((categoria) => (
+      {categorias.map((categoria) => (
         <React.Fragment key={categoria}>
           {renderizarProdutosPorCategoria(categoria)}
         </React.Fragment>
@@ -148,39 +170,13 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
   },
-  avaliacoes: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  numero_avaliacoes: {
-    fontSize: 16,
-    color: '#555',
-    marginLeft: 5,
-  },
-  info_adicional: {
-    backgroundColor: '#f0f0f0',
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 15,
-  },
-  texto_info: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 5,
-  },
-  campo_busca: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f9f9f9',
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 15,
-  },
-  input_busca: {
-    marginLeft: 10,
-    fontSize: 16,
-    flex: 1,
+  inputPesquisa: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 20,
   },
   botoesFiltro: {
     flexDirection: 'row',
@@ -208,20 +204,21 @@ const styles = StyleSheet.create({
   },
   categorias_container: {
     marginBottom: 20,
+    paddingVertical: 10,
   },
   item_categoria: {
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  imagem_categoria: {
     width: 80,
     height: 80,
+    backgroundColor: '#eee',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 10,
-    marginBottom: 5,
+    marginRight: 10,
   },
   nome_categoria: {
     fontSize: 14,
     color: '#333',
+    textAlign: 'center',
   },
   categoria_section: {
     marginBottom: 20,
