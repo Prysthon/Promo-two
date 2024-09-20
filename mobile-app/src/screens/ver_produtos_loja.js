@@ -1,96 +1,79 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { getProdutosLoja } from '../services/servico_buscar_lojas';  // Importando a função para buscar produtos via WebSocket
 
 export default function ProdutosLoja({ route }) {
   const { lojaId } = route.params;
   const navigation = useNavigation();
 
   const [carrinho, setCarrinho] = useState([]);
-  const [exibirPromocoes, setExibirPromocoes] = useState(true); // Estado para controlar qual aba está ativa
+  const [exibirPromocoes, setExibirPromocoes] = useState(true);
+  const [produtos, setProdutos] = useState([]);
+  const [loja, setLoja] = useState(null);
 
-  const loja = {
-    id: '1',
-    nome: 'Loja A',
-    distancia: '3 Km',
-    horario_abertura: '08:00 - 22:00',
-    numero_avaliacoes: 250,
-    agendamento: 'Grátis',
-    tempo_espera: '30-40 min',
-    preco_entrega: 'R$ 5,00',
-    entrega_gratis: 'Entrega grátis a partir de R$ 50,00',
-    imagem: 'https://via.placeholder.com/100',
-    categorias: {
-      Elétricos: [
-        { id: '1', nome: 'Furadeira', preco: 'R$ 150,00', promocao: 'R$ 120,00', imagem: 'https://via.placeholder.com/80', descricao: 'Furadeira de alta potência para uso profissional.', emPromocao: true },
-        { id: '2', nome: 'Parafusadeira', preco: 'R$ 200,00', imagem: 'https://via.placeholder.com/80', descricao: 'Parafusadeira compacta com bateria de longa duração.', emPromocao: false },
-      ],
-      Hidráulicos: [
-        { id: '3', nome: 'Torneira', preco: 'R$ 50,00', imagem: 'https://via.placeholder.com/80', descricao: 'Torneira de alta qualidade, ideal para cozinhas e banheiros.', emPromocao: false },
-        { id: '4', nome: 'Mangueira', preco: 'R$ 30,00', promocao: 'R$ 25,00', imagem: 'https://via.placeholder.com/80', descricao: 'Mangueira resistente para jardinagem e outras utilidades.', emPromocao: true },
-      ],
-      Alimentos: [
-        { id: '5', nome: 'Arroz', preco: 'R$ 20,00', imagem: 'https://via.placeholder.com/80', descricao: 'Arroz de alta qualidade, ideal para refeições em família.', emPromocao: false },
-        { id: '6', nome: 'Feijão', preco: 'R$ 10,00', imagem: 'https://via.placeholder.com/80', descricao: 'Feijão selecionado, pronto para o preparo.', emPromocao: false },
-      ],
-    },
-  };
+  // Buscando os produtos da loja assim que o componente for montado
+  useEffect(() => {
+    async function fetchProdutos() {
+      try {
+        const response = await getProdutosLoja(lojaId);
+        // Definindo nome da loja
+        setLoja(response.produtosLoja.nome);
+        // Verifica se existe a chave produtos dentro de produtosLoja
+        if (response.produtosLoja && Array.isArray(response.produtosLoja.produtos)) {
+          setProdutos(response.produtosLoja.produtos);
+        } else {
+          console.error('Formato inesperado de dados:', response);
+          setProdutos([]); // Garante que produtos será sempre um array
+        }
+      } catch (error) {
+        console.error('Erro ao buscar produtos da loja:', error);
+      }
+    }
+
+    fetchProdutos();
+  }, [lojaId]);
 
   const adicionarAoCarrinho = (item) => {
     setCarrinho([...carrinho, item]);
-    alert(`${item.nome} adicionado ao carrinho`);
-  };
-
-  const renderizarCategorias = () => {
-    return (
-      <FlatList
-        data={Object.keys(loja.categorias).map((categoria) => ({ nome: categoria, imagem: loja.categorias[categoria][0].imagem }))}
-        renderItem={({ item }) => (
-          <View style={styles.item_categoria}>
-            <Image source={{ uri: item.imagem }} style={styles.imagem_categoria} />
-            <Text style={styles.nome_categoria}>{item.nome}</Text>
-          </View>
-        )}
-        keyExtractor={(item) => item.nome}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.categorias_container}
-      />
-    );
+    alert(`${item.name} adicionado ao carrinho`);
   };
 
   const renderizarProdutosPorCategoria = (categoria) => {
-    const produtos = loja.categorias[categoria].filter((produto) => (exibirPromocoes ? produto.emPromocao : true));
+    // Verificando se produtos está no formato correto
+    const produtosFiltrados = (Array.isArray(produtos) ? produtos : []).filter(
+      (produto) => produto.category === categoria && (exibirPromocoes ? produto.promotion === 'Sim' : true)
+    );
 
-    if (produtos.length === 0) return null;
+    if (produtosFiltrados.length === 0) return null;
 
     return (
       <View key={categoria} style={styles.categoria_section}>
         <Text style={styles.categoria_titulo}>{categoria}</Text>
         <FlatList
-          data={produtos}
+          data={produtosFiltrados}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.item_produto}
               onPress={() => navigation.navigate('DetalhesProduto', { produto: item })}
             >
               <Image source={{ uri: item.imagem }} style={styles.imagem_produto} />
-              <Text style={styles.nome_produto}>{item.nome}</Text>
-              {item.emPromocao ? (
+              <Text style={styles.nome_produto}>{item.name}</Text>
+              {item.promotion === 'Sim' ? (
                 <View>
-                  <Text style={styles.preco_promocao}>{item.promocao} </Text>
-                  <Text style={styles.preco_original}>{item.preco}</Text>
+                  <Text style={styles.preco_promocao}>Promoção</Text>
+                  <Text style={styles.preco_original}>{`R$ ${item.price}`}</Text>
                 </View>
               ) : (
-                <Text style={styles.preco_produto}>{item.preco}</Text>
+                <Text style={styles.preco_produto}>{`R$ ${item.price}`}</Text>
               )}
               <TouchableOpacity style={styles.botao_adicionar} onPress={() => adicionarAoCarrinho(item)}>
                 <Ionicons name="add" size={24} color="#fff" />
               </TouchableOpacity>
             </TouchableOpacity>
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
         />
@@ -102,25 +85,10 @@ export default function ProdutosLoja({ route }) {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.info_loja}>
-          <Text style={styles.nome_loja}>{loja.nome}</Text>
-          <Text style={styles.horario_loja}>Aberto até: {loja.horario_abertura}</Text>
-          <Text style={styles.horario_loja}>Distancia: {loja.distancia} </Text>
+          <Text style={styles.nome_loja}>{ loja }</Text>
+          <Text style={styles.horario_loja}>Distância: 3 Km</Text>
         </View>
-        <Image source={{ uri: loja.imagem }} style={styles.imagem_loja} />
-      </View>
-
-      <View style={styles.avaliacoes}>
-        <Ionicons name="star" size={20} color="#ffd700" />
-        <Text style={styles.numero_avaliacoes}>{loja.numero_avaliacoes} avaliações</Text>
-      </View>
-
-      <View style={styles.info_adicional}>
-        <Text style={styles.texto_info}>Tempo: {loja.tempo_espera} | Preço: {loja.preco_entrega}</Text>
-      </View>
-
-      <View style={styles.campo_busca}>
-        <Ionicons name="search" size={20} color="#888" />
-        <TextInput placeholder="Buscar item ou produto" style={styles.input_busca} />
+        <Image source={{ uri: 'https://via.placeholder.com/100' }} style={styles.imagem_loja} />
       </View>
 
       {/* Botões para alternar entre promoção e todos os produtos */}
@@ -139,10 +107,12 @@ export default function ProdutosLoja({ route }) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.categoria_titulo}>Categorias</Text>
-      {renderizarCategorias()}
-
-      {Object.keys(loja.categorias).map(renderizarProdutosPorCategoria)}
+      {/* Renderizando produtos por categoria */}
+      {['Elétricos', 'Hidráulicos', 'Ferragens', 'Utensílios', 'Alimentos', 'Bebidas'].map((categoria) => (
+        <React.Fragment key={categoria}>
+          {renderizarProdutosPorCategoria(categoria)}
+        </React.Fragment>
+      ))}
     </ScrollView>
   );
 }

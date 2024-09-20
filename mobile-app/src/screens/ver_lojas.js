@@ -1,22 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { getLojas } from '../services/servico_buscar_lojas'  // Importando a função para obter as lojas via WebSocket
 
 export default function VerLojas() {
   const navigation = useNavigation();
+  const [lojas, setLojas] = useState([]);
+  const [lojasDestacadas, setLojasDestacadas] = useState([]);
 
-  const lojas_destacadas = [
-    { id: '1', nome: 'Restaurante X', imagem: 'https://via.placeholder.com/100' },
-    { id: '2', nome: 'Restaurante Y', imagem: 'https://via.placeholder.com/100' },
-    { id: '3', nome: 'Restaurante Z', imagem: 'https://via.placeholder.com/100' },
-    { id: '4', nome: 'Restaurante A', imagem: 'https://via.placeholder.com/100' },
-  ];
+  useEffect(() => {
+    // Obtendo as lojas assim que o componente carrega
+    async function fetchLojas() {
+      try {
+        const { data } = await getLojas();
+        setLojas(data);
+        // Exemplo: pegando as três primeiras lojas como destaque
+        setLojasDestacadas(data.slice(0, 3));
+      } catch (error) {
+        console.error('Erro ao buscar lojas:', error);
+      }
+    }
 
-  const lojas = [
-    { id: '1', nome: 'Loja A', estrelas: 4.5, tipo: 'Pizza', distancia: '2km', tempo_espera: '30 min', imagem: 'https://via.placeholder.com/100', aberta: true },
-    { id: '2', nome: 'Loja B', estrelas: 4.2, tipo: 'Sushi', distancia: '3km', tempo_espera: '25 min', imagem: 'https://via.placeholder.com/100', aberta: false },
-    { id: '3', nome: 'Loja C', estrelas: 4.8, tipo: 'Hambúrguer', distancia: '1.5km', tempo_espera: '20 min', imagem: 'https://via.placeholder.com/100', aberta: true },
-  ];
+    fetchLojas();
+  }, []);
 
   const renderizarLojasDestacadas = ({ item }) => (
     <TouchableOpacity
@@ -30,18 +36,18 @@ export default function VerLojas() {
   );
 
   const renderizarLojas = ({ item }) => {
-    const estilo_container = item.aberta ? styles.item_vertical : [styles.item_vertical, styles.item_fechado];
-    const estilo_imagem = item.aberta ? styles.imagem_loja : [styles.imagem_loja, { opacity: 0.5 }];
-    const estilo_texto_nome = item.aberta ? styles.nome_loja : [styles.nome_loja, { color: '#ffffff' }];
-    const estilo_texto_geral = item.aberta ? styles.texto_geral : [styles.texto_geral, { color: '#808080' }];
+    const estiloContainer = item.aberta ? styles.item_vertical : [styles.item_vertical, styles.item_fechado];
+    const estiloImagem = item.aberta ? styles.imagem_loja : [styles.imagem_loja, { opacity: 0.5 }];
+    const estiloTextoNome = item.aberta ? styles.nome_loja : [styles.nome_loja, { color: '#ffffff' }];
+    const estiloTextoGeral = item.aberta ? styles.texto_geral : [styles.texto_geral, { color: '#808080' }];
 
     return (
       <TouchableOpacity onPress={() => navigation.navigate('Produtos', { lojaId: item.id })}>
-        <View style={estilo_container}>
-          <Image source={{ uri: item.imagem }} style={estilo_imagem} />
-          <Text style={estilo_texto_nome}>{item.nome}</Text>
-          <Text style={estilo_texto_geral}>{`${item.estrelas} ⭐ | ${item.tipo} | ${item.distancia}`}</Text>
-          <Text style={estilo_texto_geral}>{item.tempo_espera}</Text>
+        <View style={estiloContainer}>
+          <Image source={{ uri: item.imagem }} style={estiloImagem} />
+          <Text style={estiloTextoNome}>{item.nome}</Text>
+          <Text style={estiloTextoGeral}>{`${item.avaliacao} ⭐ | ${item.distancia}`}</Text>
+          <Text style={estiloTextoGeral}>{item.tempo_entrega}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -52,9 +58,9 @@ export default function VerLojas() {
       <ScrollView>
         <Text style={styles.titulo_secao}>Produtos em Destaque</Text>
         <FlatList
-          data={lojas_destacadas}
+          data={lojasDestacadas}
           renderItem={renderizarLojasDestacadas}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.lista_horizontal}
@@ -67,7 +73,7 @@ export default function VerLojas() {
           </View>
         ))}
       </ScrollView>
-      
+
       {/* Botão Adicionar ao Carrinho */}
       <View style={styles.botao_adicionar_carrinho}>
         <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.imagem_loja_botao} />
@@ -189,4 +195,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

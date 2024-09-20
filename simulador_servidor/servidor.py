@@ -2,9 +2,11 @@ from flask import Flask, jsonify, request
 from flask_socketio import SocketIO, emit
 import eventlet
 import eventlet.green.socket  # Necessário para compatibilidade com Eventlet
+
 from mocks.enderecos import enderecos
 from mocks.produtos import produtos  # Importando o mock dos produtos
 from mocks.categorias import categories # Importando o mock das categorias
+from mocks.lojas import get_lojas # Importando os mocks das lojas e produtos
 
 # Aplicação Flask
 app = Flask(__name__)
@@ -30,6 +32,38 @@ sacola = {
         }
     ]
 }
+
+# Nova rota HTTP para acessar as lojas
+@socketio.on('getLojas')
+def api_get_lojas():
+    # Retorna as lojas simuladas do mock
+    emit ('lojas', {'data': get_lojas()})
+
+# Rota para acessar os produtos de uma loja específica
+@socketio.on('getProdutosLoja')
+def handle_getProdutosLoja(lojaId):
+    lojas = get_lojas()
+    loja = next((l for l in lojas if l['id'] == lojaId["lojaId"]), None)
+    
+    if loja:
+        emit('produtosLoja', { 'produtosLoja': loja })
+    else:
+        emit('ProdutosNaoEncontrados', {'message': 'enderecos_cliente'})
+
+# Filtro de produtos por categoria
+@app.route('/api/produtos', methods=['GET'])
+def api_get_produtos_categoria():
+    categoria = request.args.get('categoria')
+    lojas = get_lojas()
+
+    produtos_filtrados = []
+    for loja in lojas:
+        produtos_filtrados.extend([p for p in loja['produtos'] if p['category'] == categoria])
+
+    if produtos_filtrados:
+        return jsonify(produtos_filtrados), 200
+    else:
+        return jsonify({'error': 'Nenhum produto encontrado para essa categoria'}), 404
 
 @app.route('/api/categorias', methods=['GET'])
 def getCategorias():
