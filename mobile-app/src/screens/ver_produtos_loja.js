@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, FlatList, ScrollView, TouchableOpacity, 
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getProdutosLoja } from '../services/servico_buscar_lojas';  // Importando a função para buscar produtos via WebSocket
+import { FontAwesome } from '@expo/vector-icons'; // Importando ícone de estrela
 
 export default function ProdutosLoja({ route }) {
   const { lojaId } = route.params;
@@ -12,8 +13,11 @@ export default function ProdutosLoja({ route }) {
   const [exibirPromocoes, setExibirPromocoes] = useState(true);
   const [produtos, setProdutos] = useState([]);
   const [loja, setLoja] = useState(null);
+  const [avaliacao, setAvaliacao] = useState(0);
   const [categorias, setCategorias] = useState([]);
-  const [pesquisa, setPesquisa] = useState('');  // Novo estado para a pesquisa
+  const [tempoEntrega, setTempoEntrega] = useState('');
+  const [pesquisa, setPesquisa] = useState('');
+  const [distancia, setDistancia] = useState('');
 
   // Buscando os produtos da loja assim que o componente for montado
   useEffect(() => {
@@ -21,7 +25,10 @@ export default function ProdutosLoja({ route }) {
       try {
         const response = await getProdutosLoja(lojaId);
         setLoja(response.produtosLoja.nome);
+        setAvaliacao(response.produtosLoja.avaliacao)
         setCategorias(response.produtosLoja.categorias); 
+        setTempoEntrega(response.produtosLoja.tempo_entrega); 
+        setDistancia(response.produtosLoja.distancia); 
 
         if (response.produtosLoja && Array.isArray(response.produtosLoja.produtos)) {
           setProdutos(response.produtosLoja.produtos);
@@ -90,9 +97,24 @@ export default function ProdutosLoja({ route }) {
       <View style={styles.header}>
         <View style={styles.info_loja}>
           <Text style={styles.nome_loja}>{ loja }</Text>
-          <Text style={styles.horario_loja}>Distância: 3 Km</Text>
+          <Text style={styles.horario_loja}>Aberto até: 8:00 - 22:00</Text>
+          <Text style={styles.horario_loja}>Distância: {distancia}</Text>
         </View>
         <Image source={{ uri: 'https://via.placeholder.com/100' }} style={styles.imagem_loja} />
+      </View>
+
+      {/* Avaliação e informações de entrega abaixo da imagem da loja */}
+      <View style={styles.avaliacao_entrega_container}>
+        <View style={styles.avaliacao_container}>
+          <FontAwesome name="star" size={16} color="#FFD700" />
+          <Text style={styles.avaliacao_texto}> Avaliação: {avaliacao}</Text>
+        </View>
+        
+        <View style={styles.info_entrega}>
+          <Text style={styles.entrega_texto}>
+            {`Tempo de espera: ${tempoEntrega} | Entrega: R$5,99`}
+          </Text>
+        </View>
       </View>
 
       {/* Barra de pesquisa */}
@@ -150,20 +172,43 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 5,
   },
   info_loja: {
     flex: 1,
+    marginBottom: 5,
   },
   nome_loja: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
+    marginBottom: 2,
   },
-  horario_loja: {
-    fontSize: 14,
-    color: '#777',
-    marginTop: 5,
+  avaliacao_entrega_container: {
+    marginBottom: 10,
+  },
+  avaliacao_container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  avaliacao_texto: {
+    fontSize: 16,
+    color: '#333',
+    marginLeft: 5,
+  },
+  info_entrega: {
+    backgroundColor: '#f0f0f0',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  entrega_texto: {
+    fontSize: 15,
+    color: '#333',
   },
   imagem_loja: {
     width: 80,
@@ -284,5 +329,9 @@ const styles = StyleSheet.create({
     borderRadius: 17.5,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  horario_loja: {
+    color: '#979a9b',
+    margin: 1,
   },
 });
