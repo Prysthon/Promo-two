@@ -7,6 +7,7 @@ from mocks.enderecos import enderecos
 from mocks.produtos import produtos  # Importando o mock dos produtos
 from mocks.categorias import categories # Importando o mock das categorias
 from mocks.lojas import get_lojas # Importando os mocks das lojas e produtos
+from mocks.usuarios import usuarios
 
 # Aplicação Flask
 app = Flask(__name__)
@@ -92,20 +93,50 @@ def getProdutosDB(category=None, avaliable=None, active=True):
 
     return produtos_filtrados
 
-@app.route('/connect', methods=['POST', 'GET'])
-# def index():
-#     return render_template('index.html')
-
-def connect():
-    data = request.get_json()
+# Login WebSocket
+@socketio.on('login')
+def handle_login(data):
     username = data.get('username')
     password = data.get('password')
 
     # Verifica se o usuário e a senha são corretos
-    if username == 't' and password == '123':
-        return jsonify({'message': 'Conectado com sucesso!'}), 200
+    user = next((user for user in usuarios if user['username'] == username and user['password'] == password), None)
+
+    if user:
+        emit('login_response', {'message': 'Conectado com sucesso!'}, broadcast=False)
     else:
-        return jsonify({'message': 'Usuário ou senha inválidos'}), 401
+        emit('login_response', {'message': 'Usuário ou senha inválidos'}, broadcast=False)
+
+# Cadastro WebSocket
+@socketio.on('register')
+def handle_register(data):
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    confirm_password = data.get('confirm_password')
+
+    # Verificar se as senhas coincidem
+    if password != confirm_password:
+        emit('register_response', {'message': 'As senhas não coincidem.'}, broadcast=False)
+        return
+
+    # Verificar se o usuário ou e-mail já existe
+    if any(user['username'] == username for user in usuarios):
+        emit('register_response', {'message': 'Nome de usuário já existe.'}, broadcast=False)
+        return
+    if any(user['email'] == email for user in usuarios):
+        emit('register_response', {'message': 'E-mail já cadastrado.'}, broadcast=False)
+        return
+
+    # Adicionar novo usuário ao "banco de dados"
+    new_user = {
+        'username': username,
+        'email': email,
+        'password': password  # Não recomendado armazenar a senha diretamente; use hashing!
+    }
+    usuarios.append(new_user)
+
+    emit('register_response', {'message': 'Usuário cadastrado com sucesso!'}, broadcast=False)
 
 # Rota para o front-end
 # @app.route('/')

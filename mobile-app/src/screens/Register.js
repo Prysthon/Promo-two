@@ -1,11 +1,34 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { registerUser } from "../services/servico_login";
 
 export default function Register({ navigation }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleRegister = async () => {
+    // Verificar se as senhas coincidem
+    if (password !== confirmPassword) {
+      Alert.alert('Erro', 'As senhas não coincidem');
+      return;
+    }
+
+    try {
+      // Chamar a função de registro via WebSocket
+      const result = await registerUser(username, email, password, confirmPassword);
+
+      if (result.success) {
+        Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!');
+        navigation.navigate('Login'); // Navegar de volta para a tela de login
+      } else {
+        Alert.alert('Erro', result.message); // Exibir mensagem de erro retornada do servidor
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Falha ao registrar. Tente novamente mais tarde.');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -58,7 +81,7 @@ export default function Register({ navigation }) {
                 placeholderTextColor="#7f8c8d"
               />
             </View>
-            <TouchableOpacity style={styles.btnSecond}>
+            <TouchableOpacity style={styles.btnSecond} onPress={handleRegister}>
               <Text style={styles.btnText}>Cadastrar</Text>
             </TouchableOpacity>
             <TouchableOpacity 
