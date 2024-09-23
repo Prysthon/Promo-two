@@ -1,40 +1,48 @@
 // src/services/servico_produtos.js
+import io from 'socket.io-client';
 
-export const getProdutos = async (category = null, avaliable = 'Sim', active = true) => {
-    try {
-      // Definindo a URL base
-      let url = 'http://10.0.2.2:5001/api/products';
-      
-      // Verifica se há uma categoria e ajusta a URL
-      let queryParams = [];
-      if (category) {
-        queryParams.push(`category=${encodeURIComponent(category)}`);
-      }
-      queryParams.push(`avaliable=${encodeURIComponent(avaliable)}`);
-      queryParams.push(`active=${encodeURIComponent(active)}`);
-      
-      if (queryParams.length > 0) {
-        url += `?${queryParams.join('&')}`;
-      }
-  
-      // Faz a requisição GET para o servidor Flask
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-  
-      // Verifica se a resposta foi bem-sucedida
-      if (response.ok) {  // response.ok verifica se o status está entre 200 e 299
-        return { success: true, produtos: data };
+// Conecte-se ao WebSocket do servidor
+const socket = io('http://10.0.2.2:5001', {
+  transports: ['websocket'],
+  jsonp: false,
+  autoConnect: true
+});
+
+// Função para obter os produtos via WebSocket
+export const getProdutos = (category, avaliable, active) => {
+  return new Promise((resolve, reject) => {
+    // Emitir o evento para buscar produtos, enviando os parâmetros necessários
+    socket.emit('getProdutosCategoria', { category, avaliable, active });
+
+    // Escutando o evento 'produtosResponse' para pegar a resposta do servidor
+    socket.once('produtosResponse', (data) => {
+      if (data) {
+        resolve({ success: true, produtos: data });
       } else {
-        return { success: false, message: data.message || 'Erro ao obter produtos' };
+        reject(new Error('Nenhuma resposta do servidor'));
       }
-    } catch (error) {
-      // Em caso de erro na requisição (ex: servidor indisponível)
-      return { success: false, message: 'Erro na conexão com o servidor' };
-    }
-  };
+    });
+
+    // Timeout caso a resposta demore mais de 5 segundos
+    setTimeout(() => {
+      reject(new Error('Timeout ao buscar produtos'));
+    }, 5000);
+  });
+};
+
+// Função para adicionar um novo produto
+export const addProduto = (produto) => {
+  socket.emit('addProduto', { produto });
+};
+
+// Função para deletar um produto
+export const deleteProduto = (produtoId) => {
+  socket.emit('deleteProduto', { produtoId });
+};
+
+// Função para atualizar um produto existente
+export const updProduto = (produto) => {
+  socket.emit('updProduto', { produto });
+};
+
   

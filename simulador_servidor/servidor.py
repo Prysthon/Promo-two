@@ -70,16 +70,19 @@ def api_get_produtos_categoria():
 def handle_get_categorias():
     socketio.emit('categoriasResponse', categories)
 
-# Nova rota HTTP para acessar os produtos
-@app.route('/api/products', methods=['GET'])
-def api_get_produtos():
-    category = request.args.get('category')
-    avaliable = request.args.get('avaliable', 'Sim')
-    active = request.args.get('active', 'True') == 'True'
-    # Busca os produtos de acordo com os parâmetros passados
+# Evento WebSocket para obter produtos
+@socketio.on('getProdutosCategoria')
+def handle_get_produtos(data):
+    print('OIAAAAAAA')
+    category = data.get('category')
+    avaliable = data.get('avaliable', 'Sim')
+    active = data.get('active', True)
+    
+    # Filtrar os produtos de acordo com os parâmetros
     produtos_filtrados = getProdutosDB(category=category, avaliable=avaliable, active=active)
-    # Retorna os produtos filtrados como JSON
-    return jsonify(produtos_filtrados), 200
+    
+    # Emitir a resposta com os produtos filtrados
+    emit('produtosResponse', produtos_filtrados)
 
 # Função auxiliar para buscar produtos
 def getProdutosDB(category=None, avaliable=None, active=True):
@@ -88,8 +91,9 @@ def getProdutosDB(category=None, avaliable=None, active=True):
         produtos_filtrados = [p for p in produtos_filtrados if p.get('category') == category]
     if avaliable:
         produtos_filtrados = [p for p in produtos_filtrados if p.get('avaliable') == avaliable]
-    # produtos_filtrados = [p for p in produtos_filtrados if p.get('active') == active]
-
+    if active is not None:
+        produtos_filtrados = [p for p in produtos_filtrados if p.get('active') == active]
+    
     return produtos_filtrados
 
 # Login WebSocket
