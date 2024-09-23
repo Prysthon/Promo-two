@@ -66,10 +66,9 @@ def api_get_produtos_categoria():
     else:
         return jsonify({'error': 'Nenhum produto encontrado para essa categoria'}), 404
 
-@app.route('/api/categorias', methods=['GET'])
-def getCategorias():
-    # Retorna as categorias simuladas do banco de dados (mocks/categorias.py)
-    return jsonify(categories), 200
+@socketio.on('getCategorias')
+def handle_get_categorias():
+    socketio.emit('categoriasResponse', categories)
 
 # Nova rota HTTP para acessar os produtos
 @app.route('/api/products', methods=['GET'])

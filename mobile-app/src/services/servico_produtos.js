@@ -1,4 +1,4 @@
-// src/services/servidor_produtos.js
+// src/services/servico_produtos.js
 
 export const getProdutos = async (category = null, avaliable = 'Sim', active = true) => {
     try {
