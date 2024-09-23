@@ -2,66 +2,66 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { loginUser } from "../services/servico_login";
 
-export default function Login({ navigation }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+export default function VerLogin({ navigation }) {
+  const [nome_usuario, setNomeUsuario] = useState('');
+  const [senha_usuario, setSenhaUsuario] = useState('');
 
   const handleConnect = async () => {
-    const result = await loginUser(username, password);
+    const resultado = await loginUser(nome_usuario, senha_usuario);
 
-    if (result.success) {
+    if (resultado.success) {
       navigation.replace('HomeTabs');
     } else {
-      Alert.alert('Erro', result.message);
+      Alert.alert('Erro', resultado.message);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>PROMO</Text>
+    <View style={estilos.container}>
+      <View style={estilos.header}>
+        <Text style={estilos.headerText}>PROMO</Text>
       </View>
-      <View style={styles.content}>
-        <View style={styles.firstRow}>
-          <Text style={styles.titlePrimary}>Olá, seja bem vindo!</Text>
-          <Text style={styles.descriptionPrimary}>Insira seus dados pessoais e comece a jornada conosco.</Text>
+      <View style={estilos.content}>
+        <View style={estilos.firstRow}>
+          <Text style={estilos.titlePrimary}>Olá, seja bem vindo!</Text>
+          <Text style={estilos.descriptionPrimary}>Insira seus dados pessoais e comece a jornada conosco.</Text>
         </View>
-        <View style={styles.secondRow}>
-          <Text style={styles.titleSecond}>Entrar no PROMO</Text>
-          <View style={styles.form}>
-            <View style={styles.labelInput}>
+        <View style={estilos.secondRow}>
+          <Text style={estilos.titleSecond}>Entrar no PROMO</Text>
+          <View style={estilos.form}>
+            <View style={estilos.labelInput}>
               <TextInput 
-                style={styles.input} 
+                style={estilos.input} 
                 placeholder="Usuário"
                 placeholderTextColor="#7f8c8d"
-                value={username}
-                onChangeText={setUsername}
+                value={nome_usuario}
+                onChangeText={setNomeUsuario}
               />
             </View>
-            <View style={styles.labelInput}>
+            <View style={estilos.labelInput}>
               <TextInput 
-                style={styles.input} 
-                placeholder="Password"
+                style={estilos.input} 
+                placeholder="Senha"
                 placeholderTextColor="#7f8c8d"
                 secureTextEntry
-                value={password}
-                onChangeText={setPassword}
+                value={senha_usuario}
+                onChangeText={setSenhaUsuario}
               />
             </View>
             <TouchableOpacity 
-              style={styles.btnSecond} 
+              style={estilos.btnSecond} 
               onPress={handleConnect}
             >
-              <Text style={styles.btnText}>Entrar</Text>
+              <Text style={estilos.btnText}>Entrar</Text>
             </TouchableOpacity>
             <TouchableOpacity 
-              style={styles.btnPrimary} 
+              style={estilos.btnPrimary} 
               onPress={() => navigation.navigate('Register')}
             >
-              <Text style={styles.btnText}>Cadastrar</Text>
+              <Text style={estilos.btnText}>Cadastrar</Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <Text style={styles.password}>Esqueceu sua senha?</Text>
+              <Text style={estilos.password}>Esqueceu sua senha?</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -70,7 +70,7 @@ export default function Login({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const estilos = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -103,9 +103,8 @@ const styles = StyleSheet.create({
     height: '25%',
   },
   secondRow: {
-    width: '60%',
-    alignItems: 'center',
     width: '100%',
+    alignItems: 'center',
     height: '75%',
   },
   titlePrimary: {

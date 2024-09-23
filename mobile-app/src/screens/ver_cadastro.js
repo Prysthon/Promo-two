@@ -2,28 +2,28 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { registerUser } from "../services/servico_login";
 
-export default function Register({ navigation }) {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+export default function VerCadastro({ navigation }) {
+  const [nome_usuario, setNomeUsuario] = useState('');
+  const [email_usuario, setEmailUsuario] = useState('');
+  const [senha_usuario, setSenhaUsuario] = useState('');
+  const [confirmar_senha_usuario, setConfirmarSenhaUsuario] = useState('');
 
-  const handleRegister = async () => {
+  const handleRegistrar = async () => {
     // Verificar se as senhas coincidem
-    if (password !== confirmPassword) {
+    if (senha_usuario !== confirmar_senha_usuario) {
       Alert.alert('Erro', 'As senhas não coincidem');
       return;
     }
 
     try {
       // Chamar a função de registro via WebSocket
-      const result = await registerUser(username, email, password, confirmPassword);
+      const resultado = await registerUser(nome_usuario, email_usuario, senha_usuario, confirmar_senha_usuario);
 
-      if (result.success) {
+      if (resultado.success) {
         Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!');
         navigation.navigate('Login'); // Navegar de volta para a tela de login
       } else {
-        Alert.alert('Erro', result.message); // Exibir mensagem de erro retornada do servidor
+        Alert.alert('Erro', resultado.message); // Exibir mensagem de erro retornada do servidor
       }
     } catch (error) {
       Alert.alert('Erro', 'Falha ao registrar. Tente novamente mais tarde.');
@@ -31,64 +31,64 @@ export default function Register({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>PROMO</Text>
+    <View style={estilos.container}>
+      <View style={estilos.header}>
+        <Text style={estilos.headerText}>PROMO</Text>
       </View>
-      <View style={styles.content}>
-        <View style={styles.firstRow}>
-          <Text style={styles.titlePrimary}>Crie sua conta</Text>
-          <Text style={styles.descriptionPrimary}>Preencha as informações abaixo para se cadastrar.</Text>
+      <View style={estilos.content}>
+        <View style={estilos.firstRow}>
+          <Text style={estilos.titlePrimary}>Crie sua conta</Text>
+          <Text style={estilos.descriptionPrimary}>Preencha as informações abaixo para se cadastrar.</Text>
         </View>
-        <View style={styles.secondRow}>
-          <Text style={styles.titleSecond}>Cadastre-se no PROMO</Text>
-          <View style={styles.form}>
-            <View style={styles.labelInput}>
+        <View style={estilos.secondRow}>
+          <Text style={estilos.titleSecond}>Cadastre-se no PROMO</Text>
+          <View style={estilos.form}>
+            <View style={estilos.labelInput}>
               <TextInput 
-                style={styles.input} 
+                style={estilos.input} 
                 placeholder="Usuário"
-                value={username}
-                onChangeText={setUsername}
+                value={nome_usuario}
+                onChangeText={setNomeUsuario}
                 placeholderTextColor="#7f8c8d"
               />
             </View>
-            <View style={styles.labelInput}>
+            <View style={estilos.labelInput}>
               <TextInput 
-                style={styles.input} 
+                style={estilos.input} 
                 placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
+                value={email_usuario}
+                onChangeText={setEmailUsuario}
                 placeholderTextColor="#7f8c8d"
               />
             </View>
-            <View style={styles.labelInput}>
+            <View style={estilos.labelInput}>
               <TextInput 
-                style={styles.input} 
+                style={estilos.input} 
                 placeholder="Senha"
-                value={password}
-                onChangeText={setPassword}
+                value={senha_usuario}
+                onChangeText={setSenhaUsuario}
                 secureTextEntry
                 placeholderTextColor="#7f8c8d"
               />
             </View>
-            <View style={styles.labelInput}>
+            <View style={estilos.labelInput}>
               <TextInput 
-                style={styles.input} 
+                style={estilos.input} 
                 placeholder="Confirme a Senha"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
+                value={confirmar_senha_usuario}
+                onChangeText={setConfirmarSenhaUsuario}
                 secureTextEntry
                 placeholderTextColor="#7f8c8d"
               />
             </View>
-            <TouchableOpacity style={styles.btnSecond} onPress={handleRegister}>
-              <Text style={styles.btnText}>Cadastrar</Text>
+            <TouchableOpacity style={estilos.btnSecond} onPress={handleRegistrar}>
+              <Text style={estilos.btnText}>Cadastrar</Text>
             </TouchableOpacity>
             <TouchableOpacity 
-              style={styles.btnPrimary} 
+              style={estilos.btnPrimary} 
               onPress={() => navigation.goBack()}
             >
-              <Text style={styles.btnText}>Voltar</Text>
+              <Text style={estilos.btnText}>Voltar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -97,7 +97,7 @@ export default function Register({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const estilos = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',

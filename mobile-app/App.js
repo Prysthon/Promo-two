@@ -8,8 +8,8 @@ import messaging from '@react-native-firebase/messaging';
 import firebase from '@react-native-firebase/app';
 import axios from 'axios';
 
-import Login from './src/screens/Login.js'; 
-import Register from './src/screens/Register.js';
+import VerLogin from './src/screens/ver_login.js'; 
+import VerCadastro from './src/screens/ver_cadastro.js';
 import Profile from './src/screens/Profile.js';
 import VerLojas from './src/screens/ver_lojas.js';
 import VerPerfil from './src/screens/ver_perfil.js';
@@ -185,12 +185,12 @@ export default function App() {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="Login"
-          component={Login}
+          component={VerLogin}
           options={{ headerShown: false }}
         />
         <Stack.Screen 
           name="Register" 
-          component={Register}
+          component={VerCadastro}
           options={{ headerShown: false }}
         />
         <Stack.Screen 
