@@ -1,16 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import { loginUser } from "../services/servico_login";
 
 export default function VerLogin({ navigation }) {
   const [nome_usuario, setNomeUsuario] = useState('');
   const [senha_usuario, setSenhaUsuario] = useState('');
 
+  // Função para verificar se o usuário já está logado
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const userLoggedIn = await AsyncStorage.getItem('userLoggedIn');
+        if (userLoggedIn === 'true') {
+          navigation.replace('HomeTabs'); // Se o usuário estiver logado, redireciona para HomeTabs
+        }
+      } catch (error) {
+        console.log('Erro ao verificar login:', error);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
   const handleConnect = async () => {
     const resultado = await loginUser(nome_usuario, senha_usuario);
 
     if (resultado.success) {
-      navigation.replace('HomeTabs');
+      try {
+        // Armazenar flag indicando que o usuário está logado
+        await AsyncStorage.setItem('userLoggedIn', 'true');
+        navigation.replace('HomeTabs');
+      } catch (error) {
+        console.log('Erro ao salvar login:', error);
+      }
     } else {
       Alert.alert('Erro', resultado.message);
     }

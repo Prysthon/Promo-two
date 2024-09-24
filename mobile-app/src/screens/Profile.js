@@ -1,7 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Importando o AsyncStorage
 
 export default function Profile({ navigation }) {
+  
+  // Função de logout que limpa o AsyncStorage e redireciona para a tela de login
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('userLoggedIn'); // Remove o item indicando que o usuário está logado
+      navigation.replace('Login'); // Redireciona para a tela de login
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível fazer logout. Tente novamente.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
@@ -45,7 +57,7 @@ export default function Profile({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.logoutButton} 
-          onPress={() => navigation.replace('Login')}
+          onPress={handleLogout} // Chama a função de logout
         >
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
