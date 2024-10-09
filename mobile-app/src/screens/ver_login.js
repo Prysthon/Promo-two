@@ -1,43 +1,51 @@
+// ver_login.js
+
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
-import { loginUser } from "../services/servico_login";
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { loginUser } from "../services/servico_login";
+import { LojaWebSocketService } from "../services/loja";
+// import { UsuarioWebSocketService } from "../services/usuario";
 
 export default function VerLogin({ navigation }) {
   const [nome_usuario, setNomeUsuario] = useState('');
   const [senha_usuario, setSenhaUsuario] = useState('');
+  const [wsMessage, setWsMessage] = useState('');
 
-  // Função para verificar se o usuário já está logado
+  // Inicializa a conexão com WebSocket da rota "loja"
   useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const userLoggedIn = await AsyncStorage.getItem('userLoggedIn');
-        if (userLoggedIn === 'true') {
-          navigation.replace('HomeTabs'); // Se o usuário estiver logado, redireciona para HomeTabs
-        }
-      } catch (error) {
-        console.log('Erro ao verificar login:', error);
-      }
-    };
+    const lojaWs = new LojaWebSocketService();
+    lojaWs.onOrderResponse((message) => {
+      setWsMessage(message); // Atualiza a mensagem recebida
+    });
 
-    checkLoginStatus();
+    // Limpa o WebSocket ao desmontar o componente
+    return () => {
+      lojaWs.closeConnection();
+    };
   }, []);
 
-  const handleConnect = async () => {
-    const resultado = await loginUser(nome_usuario, senha_usuario);
+  // // Função para fazer login
+  // const handleConnect = async () => {
+  //   const resultado = await loginUser(nome_usuario, senha_usuario);
+  //   if (resultado.success) {
+  //     try {
+  //       await AsyncStorage.setItem('userLoggedIn', 'true');
+  //       const usuarioWs = new UsuarioWebSocketService();
+  //       usuarioWs.sendLoginAction(nome_usuario, senha_usuario); // Enviar ação de login via WebSocket
 
-    if (resultado.success) {
-      try {
-        // Armazenar flag indicando que o usuário está logado
-        await AsyncStorage.setItem('userLoggedIn', 'true');
-        navigation.replace('HomeTabs');
-      } catch (error) {
-        console.log('Erro ao salvar login:', error);
-      }
-    } else {
-      Alert.alert('Erro', resultado.message);
-    }
-  };
+  //       usuarioWs.onLoginResponse((response) => {
+  //         console.log('Resposta de login WebSocket:', response);
+  //       });
+
+  //       navigation.replace('HomeTabs');
+  //     } catch (error) {
+  //       console.log('Erro ao salvar login:', error);
+  //     }
+  //   } else {
+  //     Alert.alert('Erro', resultado.message);
+  //   }
+  // };
 
   return (
     <View style={estilos.container}>
@@ -73,7 +81,7 @@ export default function VerLogin({ navigation }) {
             </View>
             <TouchableOpacity 
               style={estilos.btnSecond} 
-              onPress={handleConnect}
+              // onPress={handleConnect}
             >
               <Text style={estilos.btnText}>Entrar</Text>
             </TouchableOpacity>
