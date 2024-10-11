@@ -1,7 +1,7 @@
 // ver_login.js
 
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from "react-native";
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { loginUser } from "../services/servico_login";
 import { LojaWebSocketService } from "../services/loja";
@@ -11,12 +11,16 @@ export default function VerLogin({ navigation }) {
   const [nome_usuario, setNomeUsuario] = useState('');
   const [senha_usuario, setSenhaUsuario] = useState('');
   const [wsMessage, setWsMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   // Inicializa a conexão com WebSocket da rota "loja"
   useEffect(() => {
     const lojaWs = new LojaWebSocketService();
+
     lojaWs.onOrderResponse((message) => {
       setWsMessage(message); // Atualiza a mensagem recebida
+      setIsLoading(false); // Conexão estabelecida, para o carregamento
     });
 
     // Limpa o WebSocket ao desmontar o componente
@@ -49,54 +53,62 @@ export default function VerLogin({ navigation }) {
 
   return (
     <View style={estilos.container}>
-      <View style={estilos.header}>
-        <Text style={estilos.headerText}>PROMO</Text>
-      </View>
-      <View style={estilos.content}>
-        <View style={estilos.firstRow}>
-          <Text style={estilos.titlePrimary}>Olá, seja bem vindo!</Text>
-          <Text style={estilos.descriptionPrimary}>Insira seus dados pessoais e comece a jornada conosco.</Text>
+      {isLoading ? (
+        <View style={estilos.loadingContainer}>
+          <ActivityIndicator size="large" color="#ffffff" />
+          <Text style={estilos.loadingText}>Conectando ao servidor...</Text>
         </View>
-        <View style={estilos.secondRow}>
-          <Text style={estilos.titleSecond}>Entrar no PROMO</Text>
-          <View style={estilos.form}>
-            <View style={estilos.labelInput}>
-              <TextInput 
-                style={estilos.input} 
-                placeholder="Usuário"
-                placeholderTextColor="#7f8c8d"
-                value={nome_usuario}
-                onChangeText={setNomeUsuario}
-              />
+      ) : errorMessage ? (
+        <View style={estilos.errorContainer}>
+          <Text style={estilos.errorText}>{errorMessage}</Text>
+        </View>
+      ) : (
+        <View style={estilos.content}>
+          <View style={estilos.firstRow}>
+            <Text style={estilos.titlePrimary}>Olá, seja bem vindo!</Text>
+            <Text style={estilos.descriptionPrimary}>Insira seus dados pessoais e comece a jornada conosco.</Text>
+          </View>
+          <View style={estilos.secondRow}>
+            <Text style={estilos.titleSecond}>Entrar no PROMO</Text>
+            <View style={estilos.form}>
+              <View style={estilos.labelInput}>
+                <TextInput 
+                  style={estilos.input} 
+                  placeholder="Usuário"
+                  placeholderTextColor="#7f8c8d"
+                  value={nome_usuario}
+                  onChangeText={setNomeUsuario}
+                />
+              </View>
+              <View style={estilos.labelInput}>
+                <TextInput 
+                  style={estilos.input} 
+                  placeholder="Senha"
+                  placeholderTextColor="#7f8c8d"
+                  secureTextEntry
+                  value={senha_usuario}
+                  onChangeText={setSenhaUsuario}
+                />
+              </View>
+              <TouchableOpacity 
+                style={estilos.btnSecond} 
+                // onPress={handleConnect}
+              >
+                <Text style={estilos.btnText}>Entrar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={estilos.btnPrimary} 
+                onPress={() => navigation.navigate('Register')}
+              >
+                <Text style={estilos.btnText}>Cadastrar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Text style={estilos.password}>Esqueceu sua senha?</Text>
+              </TouchableOpacity>
             </View>
-            <View style={estilos.labelInput}>
-              <TextInput 
-                style={estilos.input} 
-                placeholder="Senha"
-                placeholderTextColor="#7f8c8d"
-                secureTextEntry
-                value={senha_usuario}
-                onChangeText={setSenhaUsuario}
-              />
-            </View>
-            <TouchableOpacity 
-              style={estilos.btnSecond} 
-              // onPress={handleConnect}
-            >
-              <Text style={estilos.btnText}>Entrar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={estilos.btnPrimary} 
-              onPress={() => navigation.navigate('Register')}
-            >
-              <Text style={estilos.btnText}>Cadastrar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={estilos.password}>Esqueceu sua senha?</Text>
-            </TouchableOpacity>
           </View>
         </View>
-      </View>
+      )}
     </View>
   );
 }
@@ -109,15 +121,25 @@ const estilos = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  header: {
-    marginBottom: 20,
-    width: "100%",
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
-  headerText: {
-    fontSize: 72,
-    fontWeight: 'bold',
+  loadingText: {
+    marginTop: 10,
     color: '#ffffff',
-    textAlign: 'center',
+    fontSize: 18,
+  },
+  errorContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+  },
+  errorText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   content: {
     backgroundColor: '#ffffff',
